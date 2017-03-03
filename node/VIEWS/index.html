@@ -1,1 +1,20 @@
-hello
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="js/lib/angular.js"></script>
+        <script src="js/app.js"></script>
+
+        <script>console.log(window.location.pathname);</script>
+
+        <title>Home</title>
+    </head>
+
+    <body ng-app="mealsApp">
+        <div ng-controller="MealsController">
+            <button ng-click="chiliSpicy()">Chili</button>
+            <button ng-click="jalapenoSpicy()">Jalapeño</button>
+            <p>The food is {{spice}} spicy!</p>
+        </div>
+    </body>
+
+</html>
