@@ -16,6 +16,19 @@ mealsApp.controller('MealsController', ['$scope', function($scope) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+mealsApp.directive('mealDetail', function() {
+  return {
+      replace: true,
+      controller: 'MealsController',
+      bindToController: true,
+      restrict: 'EA',
+      templateUrl: '<span>Name: {{spice}} </span>',
+      styleUrl: 
+    }
+  });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 mealsApp.module('mealsApp', ['mealsApp.filters', 'mealsApp.services', 'mealsApp.directives']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
