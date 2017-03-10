@@ -13,25 +13,22 @@ app.get('/test', function (req, res){
 	console.log ('GET /test');
 	res.render('main.ejs', {page:"index.ejs"});
 });
+
 app.get('/index', function (req, res){
 	console.log ('GET /index');
-	res.render('main.ejs');
+	res.render('main.ejs', {page:"index.ejs"});
 
 	});
 	
-app.get('/alex', function (req, res){
-	console.log ('GET /alex');
-	res.render('main.ejs', {page:"about"});
+app.get('/viewCustomers', function (req, res){
+	console.log ('GET /viewCustomers');
+	res.render('main.ejs', {page:"viewCustomers"});
 });
 
 app.get('/Zak', function (req, res){
 	console.log ('GET /Zak');
 	res.render('main.ejs', {page:"index"});
 });
-
-	// res.render('index.html', {
-      // page: "about"
-   // });
 
 	
 app.get('/', function (req, res){
