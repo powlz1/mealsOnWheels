@@ -9,14 +9,29 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 	
 //Test serving static file
-app.get('/index', function (req, res){
-	console.log ('GET /index');
-	res.render('index.html');
+app.get('/test', function (req, res){
+	console.log ('GET /test');
+	res.render('main.ejs', {page:"photos"});
 	});
 	
-app.get('/about', function (req, res){
-	console.log ('GET /about');
-	res.render('about.html');
+app.get('/alex', function (req, res){
+	console.log ('GET /alex');
+	res.render('main.ejs', {page:"about"});
+});
+
+app.get('/Zak', function (req, res){
+	console.log ('GET /Zak');
+	res.render('main.ejs', {page:"index"});
+});
+
+	// res.render('index.html', {
+      // page: "about"
+   // });
+
+	
+app.get('/', function (req, res){
+	console.log ('GET /index');
+	res.render('index.html');
 	});
 	
 app.use(express.static(__dirname + '/public'));
