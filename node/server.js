@@ -11,7 +11,7 @@ app.engine('html', require('ejs').renderFile);
 //Test serving static file
 app.get('/index', function (req, res){
 	console.log ('GET /index');
-	res.render('index.html');
+	res.render('main.ejs');
 	});
 	
 app.get('/about', function (req, res){
