@@ -1,6 +1,8 @@
 var express    =    require('express');
 var app        =    express();
 var Sequelize  =    require('sequelize');
+var mysql 	   = 	require('mysql');
+var orm 	   =  	require('./orm.js');
 
 require('./router/main')(app);
 app.set('views',__dirname + '/views');
@@ -9,9 +11,8 @@ app.engine('html', require('ejs').renderFile);
 
 var server     =    app.listen(3000,function(){
 console.log("Express is running on port 3000");
-
-
 });
+
 
 //initialising javascript - http://docs.sequelizejs.com/en/v3/docs/getting-started/
 var sequelize = new Sequelize('mow', 'root', '1234', {
@@ -22,56 +23,43 @@ var sequelize = new Sequelize('mow', 'root', '1234', {
     max: 5,
     min: 0,
     idle: 10000
-  },
+  }
 });
 
+var customer = sequelize.define('customer',orm.Customer);
+var customerDay = sequelize.define('customerDay',orm.CustomerDay);
+var mrCategory = sequelize.define('MRcategory',orm.MRcategory);
+var mealR = sequelize.define('mealR',orm.mealR);
+var customerMR =  sequelize.define('customerMR',orm.customerMR);
+var driver = sequelize.define('driver',orm.driver);
 
-var Customer = sequelize.define('customer',{
-	customerID:{
-		autoIncrement:true,
-		type:Sequelize.INTEGER,
-		primaryKey:true
-	},
-	firstName:{
-		type:Sequelize.STRING,
-		field: 'first_name' //creates table attribute
-	},
-	lastName:{
-		type:Sequelize.STRING,
-		field: 'last_name' //creates table attributes
-	},
-	address:{
-		type:Sequelize.STRING,
-		field: 'address'
-	},
-	email:{
-		type:Sequelize.STRING,
-		field:'email'
-	},
-	phoneNumber:{
-		type:Sequelize.STRING,
-		field:'phoneNumber'
-	}
-});
+//console.log(customer);
 
-var person = Customer.build({
-	firstName:"Thomas",
-	lastName:"Watson",
+//console.log("end");
+
+sequelize.sync();
+var person = customer.build({
+	firstName:"adon",
+	lastName:"moskal",
 	address:"sdfgdfdfkdfdf",
 	email:"watsiodnf@sfgk.com",
 	phoneNumber:"858839"
 });
 
-//console.log(person.firstName);
+//console.log(person);
 
-sequelize.sync();
-person.save().then(function() {console.log("person saved");});
-
-Customer.findAll({where:{firstName:"Thomas"}})
-		.then(function(customers){
-				console.log(customers[0].dataValues);
-		});
-
+//17 mar get select working properly - find out how to do foreign keys
+person.save().then(function() 
+			{
+				customer.findAll()
+					.then(function(customers){
+					for (var i;i<customers.length;i++){
+						console.log(customers[i].dataValues);
+					}
+				})
+			});
+ 
+ //select statement
 
 
 
