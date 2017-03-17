@@ -63,6 +63,25 @@ module.exports.CustomerDay = {
 };
 //Customer.belongsTo(CustomerDay); //foreign key declaration
 
+module.exports.Staff = {
+	staffID:{
+		autoIncrement:true,
+		type:Sequelize.INTEGER,
+		primaryKey:true, 
+		field:'staffID'
+	},
+	StaffType:{
+		type:Sequelize.STRING,
+		field:'StaffType'
+	},
+	StaffAvailability:{
+		type:Sequelize.STRING,
+		field:'StaffAvailability'
+	},
+};
+
+
+
 module.exports.MRcategory = {
 	MRcategoryID:{
 		autoIncrement:true,
