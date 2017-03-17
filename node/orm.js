@@ -5,7 +5,11 @@ module.exports.Customer = {  //module.exports so the server.js file can access
 		autoIncrement:true,
 		type:Sequelize.INTEGER,
 		primaryKey:true,
-		field:'customerID'
+		field:'customer_id'
+	},
+	customerNumber:{
+		type:Sequelize.INTEGER,
+		field:'customerNumber'
 	},
 	firstName:{
 		type:Sequelize.STRING,
@@ -26,7 +30,24 @@ module.exports.Customer = {  //module.exports so the server.js file can access
 	phoneNumber:{
 		type:Sequelize.STRING,
 		field:'phone'
+	},
+	customerStatus:{   //active, not active, dead
+		type:Sequelize.STRING,
+		field:'status'
+	},
+	bio:{
+		type:Sequelize.STRING,
+		field:'bio'
+	},
+	photo:{
+		type:Sequelize.BLOB,
+		field:'photo'
+	},
+	adminNotes:{
+		type:Sequelize.STRING,
+		field:'adminNotes'
 	}
+		
 };
 module.exports.CustomerDay = {
 	customerDayID:{
