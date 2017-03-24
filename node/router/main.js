@@ -14,4 +14,15 @@ module.exports = function(app)
 		console.log ('GET /viewCustomers');
 		res.render('main.ejs', {page:"viewCustomers"});
 	});
+	
+	app.post('/addCustomers', function (req, res){
+		console.log(req.body);
+		console.log ('POST /addCustomers');
+		res.render('main.ejs', {page:"addCustomers"});
+	});
+	
+	app.get('/addCustomers', function (req, res){
+		console.log ('GET /addCustomers');
+		res.render('main.ejs', {page:"addCustomers"});
+	});
 }

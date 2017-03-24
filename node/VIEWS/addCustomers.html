@@ -1,0 +1,46 @@
+<body>
+
+<div ng-app="AddCustomer" ng-controller="CustomerCtrl">
+
+<form ng-submit="search()">
+First name:<br>
+  <input type="text" name="firstname"><br>
+Last name:<br>
+  <input type="text" name="lastname">
+  <input type="submit" value="Search">
+ </form>
+ 
+ <div>
+  Results:
+	<ul>
+      <!-- assuming our search returns an array of users matching the search -->
+      <li ng-repeat="user in results">
+         {{user.first_name}} {{user.last_name}}
+      </li>
+    </ul>
+  </div>
+  
+ </div>
+  
+
+
+</body>
+
+<script type="text/javascript">
+
+ angular.module('AddCustomer', [])
+  .controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
+      $scope.user = {};
+      $scope.results = [];
+
+      $scope.search = function () {
+          /* the $http service allows you to make arbitrary ajax requests.
+           * in this case you might also consider using angular-resource and setting up a
+           * User $resource. */
+          $http.post('/addCustomers', { 'Bob': 'Smith' },
+            function (response) { $scope.results = response; },
+            function (failure) { console.log("failed :(", failure); });
+      }
+  }]);
+
+</script>
