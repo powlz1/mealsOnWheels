@@ -25,86 +25,104 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `customer`
 --
 
-CREATE TABLE IF NOT EXISTS `customer` (
-  `customer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(50) NOT NULL,
-  `lastName` varchar(50) NOT NULL,
-  `address` varchar(100) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `phone` varchar(250) NOT NULL,
-  PRIMARY KEY (`customer_id`)
+CREATE TABLE IF NOT EXISTS customer (
+  customer_id int(11) NOT NULL AUTO_INCREMENT,
+  firstName varchar(50) NOT NULL,
+  lastName varchar(50) NOT NULL,
+  address varchar(100) NOT NULL,
+  email varchar(50) NOT NULL,
+  phone varchar(250) NOT NULL,
+  customerNumber int(11) NOT NULL,
+  customerStatus varchar(250) NOT NULL,
+  bio varchar(500),
+  photo blob,
+  adminNotes varchar(250),
+  PRIMARY KEY (customer_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-INSERT INTO customer (firstName,lastName,address,email,phone) VALUES  
-('firstName1','lastName1','address1','email1','phone1'),
-('firstName2','lastName2','address2','email2','phone2'),
-('firstName3','lastName3','address3','email3','phone3');
+CREATE TABLE IF NOT EXISTS staff (
+  staff_id int(11) NOT NULL AUTO_INCREMENT,
+  staffType varchar(50) NOT NULL,
+  staffAvailability varchar(50) NOT NULL,
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-CREATE TABLE IF NOT EXISTS `customerDay` (
-  `customerDayid` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date,
+
+CREATE TABLE IF NOT EXISTS customerDay (
+  customerDayid int(11) NOT NULL AUTO_INCREMENT,
   customerid int(11) NOT NULL,
-  CONSTRAINT Event_country FOREIGN KEY (customerid) REFERENCES customer(customer_id),
+  CONSTRAINT customerDay_customerDay FOREIGN KEY (customerid) REFERENCES customer(customer_id) ON DELETE SET NULL ON UPDATE CASCADE,
   PRIMARY KEY (customerDayid)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-/*
-INSERT INTO customerDay VALUES
-(1),
-(2),
-(3);
-*/
 
-CREATE TABLE IF NOT EXISTS `MRcategory` (
-  `MRcategoryid` int(11) NOT NULL AUTO_INCREMENT,
-  `category` varchar(50) NOT NULL,
-  `mealRid` int(11) NOT NULL,
-  CONSTRAINT Event_country FOREIGN KEY (mealRid) REFERENCES mealR(mealRid),
+
+
+
+CREATE TABLE IF NOT EXISTS MRcategory (
+  MRcategoryid int(11) NOT NULL AUTO_INCREMENT,
+  category varchar(50) NOT NULL,
+  mealRid int(11) NOT NULL,
+  CONSTRAINT MRcategory_mealR FOREIGN KEY (mealRid) REFERENCES mealR(mealRid) ON DELETE SET NULL ON UPDATE CASCADE,
   PRIMARY KEY (MRcategoryid)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-INSERT INTO MRcategory (category) VALUES
-('category1'),
-('category2'),
-('category3');
 
-CREATE TABLE IF NOT EXISTS `mealR` (
-  `mealRid` int(11) NOT NULL AUTO_INCREMENT,
-  `requirment` varchar(50) NOT NULL,
-  `categoryid` int(11) NOT NULL,
- CONSTRAINT Event_country FOREIGN KEY (categoryid) REFERENCES MRcategory(mealRid),
+
+
+
+CREATE TABLE IF NOT EXISTS customerMR (
+  customerid int(11) NOT NULL,
+  mealRid int(11) NOT NULL,
+ CONSTRAINT customerMR_customer FOREIGN KEY (customerid) REFERENCES customer(customer_id) ON DELETE SET NULL ON UPDATE CASCADE,
+ CONSTRAINT customerMR_mealR FOREIGN KEY (mealRid) REFERENCES mealR(mealRid) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+
+
+CREATE TABLE IF NOT EXISTS mealR (
+  mealRid int(11) NOT NULL AUTO_INCREMENT,
+  requirment varchar(50) NOT NULL,
+  categoryid int(11) NOT NULL,
+ CONSTRAINT mealR_MRcategory FOREIGN KEY (categoryid) REFERENCES MRcategory(mealRid) ON DELETE SET NULL ON UPDATE CASCADE,
   PRIMARY KEY (mealRid)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-INSERT INTO mealR (requirment) VALUES
-('requirment1'),
-('requirment2'),
-('requirment3');
 
-CREATE TABLE IF NOT EXISTS `customerMR` (
-  `customerid` int(11) NOT NULL,
-  `mealRid` int(11) NOT NULL,
- CONSTRAINT Event_country FOREIGN KEY (customerid) REFERENCES customer(customer_id),
- CONSTRAINT Event_country2 FOREIGN KEY (mealRid) REFERENCES mealR(mealRid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-/*
-INSERT INTO customerMR VALUES
-(1,10),
-(2,11),
-(3,12);
-*/
-
-CREATE TABLE IF NOT EXISTS `driver`(
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `phone` varchar(250) NOT NULL
+CREATE TABLE IF NOT EXISTS driver(
+  username varchar(50) NOT NULL,
+  password varchar(50) NOT NULL,
+  email varchar(50) NOT NULL,
+  phone varchar(250) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
---
--- Dumping data for table `customer`
---
+
+INSERT INTO customerDay(customerid) VALUES
+(1),
+(2),
+(3);
+
+INSERT INTO MRcategory (category, mealRid) VALUES
+('category1',1),
+('category2',2),
+('category3',3);
+
+
+INSERT INTO customerMR(customerid,mealRid) VALUES
+(1,1),
+(2,2),
+(3,3);
+
+INSERT INTO mealR (requirment,categoryid ) VALUES
+('requirment1',1),
+('requirment2',2),
+('requirment3',3);
+
+INSERT INTO customer VALUES  
+('1','firstName1','lastName1','address1','email1','phone1'),
+('2','firstName2','lastName2','address2','email2','phone2'),
+('3','firstName3','lastName3','address3','email3','phone3');
 
 INSERT INTO driver (username, password, email, phone) VALUES
 ('username1','password1','email1','phone1'),
