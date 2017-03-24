@@ -1,6 +1,11 @@
 //rename to models.js
+
+var exports=module.exports={};
+
 var Sequelize  =    require('sequelize');
-module.exports.Customer = {  //module.exports so the server.js file can access
+
+
+exports.Customer = {  //module.exports so the server.js file can access
 	customerID:{
 		autoIncrement:true,
 		type:Sequelize.INTEGER,
@@ -49,26 +54,31 @@ module.exports.Customer = {  //module.exports so the server.js file can access
 	}
 		
 };
-module.exports.CustomerDay = {
+
+exports.CustomerDay = {
 	customerDayID:{
 		autoIncrement:true,
 		type:Sequelize.INTEGER,
 		primaryKey:true, 
 		field:'customerDayid'
 	},
-	date:{
-		type:Sequelize.DATE,
-		field:'date'
+	day:{
+		type:Sequelize.STRING,
+		field:'day'
+	},
+	customerID:{
+		type:Sequelize.INTEGER
 	}
 };
-//Customer.belongsTo(CustomerDay); //foreign key declaration
+//(module.exports.Customer).hasOne(module.exports.CustomerDay, {foreignKey:'customerID'}); //foreign key declaration
+//exports.CustomerDay.hasOne(Customer, {foreignKeyConstraint:true});
 
-module.exports.MRcategory = {
-	MRcategoryID:{
+exports.MealRequirementCategory = {
+	mealRequirementCategoryID:{
 		autoIncrement:true,
 		type:Sequelize.INTEGER,
 		primaryKey:true,
-		field:'MRcategoryID'
+		field:'mealRequirementCategoryID'
 	},
 	category:{
 		type:Sequelize.STRING,
@@ -77,12 +87,12 @@ module.exports.MRcategory = {
 };
 //mealR.belongsTo(MRcategory);
 
-module.exports.mealR = {
-	mealRid:{
+exports.MealRequirement = {
+	mealRequirementID:{
 		autoIncrement:true,
 		type:Sequelize.INTEGER,
 		primaryKey:true,
-		field:'mealRid'
+		field:'mealRequirementID'
 	},
 	requirement:{
 		type:Sequelize.STRING,
@@ -90,19 +100,20 @@ module.exports.mealR = {
 	}
 };
 
-module.exports.customerMR ={
-	customerMRid:{
+exports.CustomerMealRequirement ={
+	customerMealRequirementID:{
 		autoIncrement:true,
 		type:Sequelize.INTEGER,
 		primaryKey:true,
-		field:'customerMRid'
+		field:'customerMealRequirementID'
 	}
 };
 
 /*Customer.belongsTo(customerMR);
 mealR.belongsTo(customerMR);*/
 
-module.exports.driver = {
+
+exports.Driver = {
 	username:{
 		type:Sequelize.STRING,
 		field:'username'
@@ -118,5 +129,22 @@ module.exports.driver = {
 	phone:{
 		type:Sequelize.STRING,
 		field:'phone'
+	},
+};
+
+exports.Staff = {
+	staffID:{
+		autoIncrement:true,
+		type:Sequelize.INTEGER,
+		primaryKey:true, 
+		field:'staffID'
+	},
+	staffType:{
+		type:Sequelize.STRING,
+		field:'StaffType'
+	},
+	staffAvailability:{
+		type:Sequelize.STRING,
+		field:'StaffAvailability'
 	},
 };
