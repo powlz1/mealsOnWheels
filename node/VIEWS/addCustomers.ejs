@@ -4,9 +4,9 @@
 
 <form ng-submit="search()">
 First name:<br>
-  <input type="text" name="firstname"><br>
+  <input type="text" id="firstname"><br>
 Last name:<br>
-  <input type="text" name="lastname">
+  <input type="text" id="lastname">
   <input type="submit" value="Search">
  </form>
  
@@ -32,12 +32,19 @@ Last name:<br>
   .controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
       $scope.user = {};
       $scope.results = [];
+	  
+	 
 
       $scope.search = function () {
+	   var fname = document.getElementById("firstname").value;
+	  var lname = document.getElementById("lastname").value;
           /* the $http service allows you to make arbitrary ajax requests.
            * in this case you might also consider using angular-resource and setting up a
            * User $resource. */
-          $http.post('/addCustomers', { 'Bob': 'Smith' },
+		   console.log("clicked");
+		   console.log(fname);
+          $http.post('/addCustomers', { "fname" : fname,
+										"lname" : lname},
             function (response) { $scope.results = response; },
             function (failure) { console.log("failed :(", failure); });
       }

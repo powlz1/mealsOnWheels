@@ -4,22 +4,17 @@ var app        =    express();
 
 var server = require('http').createServer (app);
 
+var exports = module.exports = {};
 var Sequelize  =    require('sequelize');
 var mysql 	   = 	require('mysql');
 var orm 	   =  	require('./orm.js');
+var bodyParser = 	require('body-parser');
+	app.use(bodyParser.json());
+	app.use(bodyParser.urlencoded({
+	extended: true
+	}));
 
 
-require('./router/main')(app);
-app.set('views',__dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-
-	
-app.use(express.static(__dirname + '/public'));
-
-var server     =    app.listen(3000,function(){
-console.log("Express is running on port 3000");
-});
 
 
 //initialising javascript - http://docs.sequelizejs.com/en/v3/docs/getting-started/
@@ -52,17 +47,20 @@ customerMR.sync();
 driver.sync();
 staff.sync();
 
-//adds data one row at a time, every time it runs
-var person = customer.bulkCreate([ //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
-{customerNumber:"0001",firstName:"adon",lastName:"moskal",address:"sdfgdfdfkdfdf",email:"watsiodnf@sfgk.com",phoneNumber:"858839",customerStatus:"active",bio:"dfhdfghdfdhasfhdgh",photo:"img.jpg",adminNotes:"sdfghjkgfjkdfhjkdf"},
-{customerNumber:"0002",firstName:"sam",lastName:"watson",address:"sdfgdfdfkdfdf",email:"watsiodnf@sfgk.com",phoneNumber:"858839",customerStatus:"dead",bio:"dfhdfghdfdhasfhdgh",photo:"img.jpg",adminNotes:"sdfghjkgfjkdfhjkdf"}
-]);
+exports.customer = customer;
 
-var addDay = customerDay.create({
-	day:"Monday",
-	customerID:"1"
-});
+ //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
 
-var mealReq=mrCategory.create({
-	category:"No tomatoes"
+
+
+require('./router/main')(app);
+app.set('views',__dirname + '/views');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
+	
+app.use(express.static(__dirname + '/public'));
+
+var server     =    app.listen(3000,function(){
+console.log("Express is running on port 3000");
 });
