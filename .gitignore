@@ -36,4 +36,5 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# ignore entire node_module folder
 node/node_modules/*
