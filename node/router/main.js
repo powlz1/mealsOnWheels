@@ -26,3 +26,5 @@ module.exports = function(app)
 		res.render('main.ejs', {page:"addCustomers"});
 	});
 }
+
+
