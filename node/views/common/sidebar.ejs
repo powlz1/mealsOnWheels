@@ -1,0 +1,8 @@
+<%  current_user = {isAdmin:"False"}; %> 
+
+
+<% if (current_user.isAdmin == "True") { %>
+	<% include ../partials/adminNavbar.ejs %>
+<% } else { %>
+	<% include ../partials/userNavbar.ejs %>
+<% } %>
