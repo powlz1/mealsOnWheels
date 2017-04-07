@@ -6,8 +6,7 @@
   {
 		"install-dependencies": "npm install"
   },
-  "dependencies": 
-  {
+  "dependencies": {
     "ejs": "~2.5.6",
     "express": "~4.0.0",
     "mysql": "^2.13.0",

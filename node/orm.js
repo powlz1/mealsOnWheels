@@ -13,7 +13,11 @@ exports.Customer = {  //module.exports so the server.js file can access
 		field:'customer_id'
 	},
 	customerNumber:{
+<<<<<<< HEAD
 		type:Sequelize.INTEGER,
+=======
+		type:Sequelize.STRING,
+>>>>>>> a7c3d10f911c4d9db71c2a3c5b34c480919b989d
 		field:'customerNumber'
 	},
 	firstName:{

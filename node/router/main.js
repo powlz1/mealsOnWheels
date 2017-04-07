@@ -32,9 +32,26 @@ module.exports = function(app)
 	app.post('/addCustomers', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addCustomers');
+<<<<<<< HEAD
 		
 		var person = customer.create( //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
 			{customerNumber:"0001",firstName:req.body.fname,lastName:req.body.lname,address:"sdfgdfdfkdfdf",email:"watsiodnf@sfgk.com",phoneNumber:"858839",customerStatus:"active",bio:"dfhdfghdfdhasfhdgh",photo:"img.jpg",adminNotes:"sdfghjkgfjkdfhjkdf"}
+=======
+		console.log(req.body.fname);
+		
+		var person = customer.create( //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
+			{
+				customerNumber:req.body.cusNum,
+				firstName:req.body.fname,
+				lastName:req.body.lname,
+				address:req.body.address,
+				email:req.body.email,
+				phoneNumber:req.body.phone,
+				customerStatus:req.body.cusStatus,
+				bio:req.body.bio,
+				photo:req.body.photo,
+				adminNotes:req.body.notes}
+>>>>>>> a7c3d10f911c4d9db71c2a3c5b34c480919b989d
 		);
 		customer.sync();
 		
@@ -50,4 +67,10 @@ module.exports = function(app)
 	});
 	
 	
+<<<<<<< HEAD
 }
+=======
+}
+
+
+>>>>>>> a7c3d10f911c4d9db71c2a3c5b34c480919b989d
