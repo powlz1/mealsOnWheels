@@ -13,7 +13,7 @@ exports.Customer = {  //module.exports so the server.js file can access
 		field:'customer_id'
 	},
 	customerNumber:{
-		type:Sequelize.INTEGER,
+		type:Sequelize.STRING,
 		field:'customerNumber'
 	},
 	firstName:{

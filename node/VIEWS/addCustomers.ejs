@@ -3,19 +3,36 @@
 <div ng-app="AddCustomer" ng-controller="CustomerCtrl">
 
 <form ng-submit="search()">
+Customer Number:<br>
+  <input type="text" id="cusNum"><br>
 First name:<br>
   <input type="text" id="firstname"><br>
 Last name:<br>
-  <input type="text" id="lastname">
-  <input type="submit" value="Search">
+  <input type="text" id="lastname"><br>
+  
+Address:<br>
+  <input type="text" id="address"><br>
+Email:<br>
+  <input type="text" id="email">  <br>
+Phone Number:<br>
+  <input type="text" id="phone"><br>
+Bio:<br>
+  <textarea id="bio"></textarea> <br>
+Photo:<br>
+  <input type="text" id="photo"><br>
+Customer Status:<br>
+  <input type="text" id="status"><br>
+Admin Notes:<br>
+  <input type="text" id="notes"><br><br>
+  <input type="submit" value="Add" >
  </form>
- 
+ <br><br>
+ <br><br>
  <div>
   Results:
 	<ul>
       <!-- assuming our search returns an array of users matching the search -->
-      <li ng-repeat="user in results">
-         {{user.first_name}} {{user.last_name}}
+      <li id="name">
       </li>
     </ul>
   </div>
@@ -36,15 +53,37 @@ Last name:<br>
 	 
 
       $scope.search = function () {
+	   var cusNum = parseInt(document.getElementById("cusNum").value);
 	   var fname = document.getElementById("firstname").value;
-	  var lname = document.getElementById("lastname").value;
+	   var lname = document.getElementById("lastname").value;
+	   var address = document.getElementById("address").value;
+	   var email = document.getElementById("email").value;
+	   var phone = document.getElementById("phone").value;
+	   var bio = document.getElementById("bio").value;
+	   var photo = document.getElementById("photo").value;
+	   var cusStatus = document.getElementById("status").value;
+	   var notes = document.getElementById("notes").value;
+	   
+	   console.log(fname);	
+	  
+	  
           /* the $http service allows you to make arbitrary ajax requests.
            * in this case you might also consider using angular-resource and setting up a
            * User $resource. */
 		   console.log("clicked");
 		   console.log(fname);
-          $http.post('/addCustomers', { "fname" : fname,
-										"lname" : lname},
+          $http.post('/addCustomers', { 
+										"cusNum" : cusNum,
+										"fname" : fname,
+										"lname" : lname,
+										"address" : address,
+										"email" : email,
+										"phone" : phone,
+										"bio" : bio,
+										"photo" : photo,
+										"cusStatus" : cusStatus,
+										"notes" : notes		
+										},
             function (response) { $scope.results = response; },
             function (failure) { console.log("failed :(", failure); });
       }

@@ -32,9 +32,20 @@ module.exports = function(app)
 	app.post('/addCustomers', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addCustomers');
+		console.log(req.body.fname);
 		
 		var person = customer.create( //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
-			{customerNumber:"0001",firstName:req.body.fname,lastName:req.body.lname,address:"sdfgdfdfkdfdf",email:"watsiodnf@sfgk.com",phoneNumber:"858839",customerStatus:"active",bio:"dfhdfghdfdhasfhdgh",photo:"img.jpg",adminNotes:"sdfghjkgfjkdfhjkdf"}
+			{
+				customerNumber:req.body.cusNum,
+				firstName:req.body.fname,
+				lastName:req.body.lname,
+				address:req.body.address,
+				email:req.body.email,
+				phoneNumber:req.body.phone,
+				customerStatus:req.body.cusStatus,
+				bio:req.body.bio,
+				photo:req.body.photo,
+				adminNotes:req.body.notes}
 		);
 		customer.sync();
 		
