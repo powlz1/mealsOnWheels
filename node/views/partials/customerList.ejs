@@ -1,0 +1,8 @@
+<ul>
+<% var customers = [{firstName:"Adon",lastName:"Moskal"}]; %>
+	<% if (typeof customers != 'undefined') { %>
+		<% customers.forEach(function(customer){ %>
+			<% include customer.ejs %>
+		<% }); %>
+	<% } %>		
+</ul>
