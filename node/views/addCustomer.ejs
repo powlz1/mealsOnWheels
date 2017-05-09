@@ -1,0 +1,117 @@
+<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats) %>'>
+    <div class="col-md-6 mt-4">
+        <div ng-controller="CustomerCtrl">
+            <div class="card">
+                <h3 class="card-header bg-success text-white">Customer details</h3>
+                <div class="card-block">
+                    <form ng-submit="search()">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="customerStatus">Customer status</label>
+                                    <select class="form-control" id="customerStatus">
+                                        <option value="active">Active</option>
+                                        <option value="notActive">Not active</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="customerNumber">Customer number</label>
+                                    <input type="text" id="customerNumber" class="form-control" <% if(locals.customers && locals.customers[0]){%>value="<%- customers[0]["customerNumber"] %>"<% } %> />
+                                </div>
+                            </div>
+                        </div>
+                        <% field = {fieldId:"firstName",fieldName: "First name"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"lastName",fieldName: "Last name"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"address",fieldName: "Address"} %>
+                        <% include partials/customerTextarea.ejs %>
+
+                        <% field = {fieldId:"email",fieldName: "Email address"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"phoneNumber",fieldName: "Phone number"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"bio",fieldName: "Bio"} %>
+                        <% include partials/customerTextarea.ejs %>
+
+                        <% field = {fieldId:"photo",fieldName: "Photo"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"adminNotes",fieldName: "Admin notes"} %>
+                        <% include partials/customerTextarea.ejs %>
+
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="row">
+            <div class="col-md-4" ng-repeat="cat in mrcats">
+                <div class="card">
+                    <h3 class="card-header bg-inverse text-white">{{ cat.category }}</h3>
+                    <div class="card-block">
+                        <div ng-repeat="mealr in cat.mealRs">
+                            <div class="form-group">
+                                <input type="checkbox" />
+                                <label>{{ mealr.requirement }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+ angular.module('AddCustomer', [])
+  .controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
+
+
+      $scope.user = {};
+      $scope.results = [];
+	  
+      $scope.search = function () {
+	   var customerNumber = parseInt(document.getElementById("customerNumber").value);
+	   var firstName = document.getElementById("firstName").value;
+	   var lastName = document.getElementById("lastName").value;
+	   var address = document.getElementById("address").value;
+	   var email = document.getElementById("email").value;
+	   var phoneNumber = document.getElementById("phoneNumber").value;
+	   var bio = document.getElementById("bio").value;
+	   var photo = document.getElementById("photo").value;
+	   var customerStatus = document.getElementById("customerStatus").value;
+	   var adminNotes = document.getElementById("adminNotes").value;
+	  
+          /* the $http service allows you to make arbitrary ajax requests.
+           * in this case you might also consider using angular-resource and setting up a
+           * User $resource. */
+		   console.log("clicked");
+
+          $http.post('/addCustomers', { 
+										"customerNumber" : customerNumber,
+										"firstName" : firstName,
+										"lastName" : lastName,
+										"address" : address,
+										"email" : email,
+										"phoneNumber" : phoneNumber,
+										"bio" : bio,
+										"photo" : photo,
+										"customerStatus" : customerStatus,
+										"adminNotes" : adminNotes
+										},
+            function (response) { $scope.results = response; },
+            function (failure) { console.log("failed : ", failure ); });
+      }
+  }]);
+
+</script>

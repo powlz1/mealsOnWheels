@@ -12,7 +12,7 @@ var bodyParser = 	require('body-parser');
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({
 	extended: true
-	}));
+}));
 
 //initialising javascript - http://docs.sequelizejs.com/en/v3/docs/getting-started/
 var sequelize = new Sequelize('mow', 'root', '1234', {
@@ -30,6 +30,10 @@ var customer = sequelize.define('customer',orm.Customer);
 var customerDay = sequelize.define('customerDay',orm.CustomerDay);
 var mrCategory = sequelize.define('MRcategory',orm.MealRequirementCategory);
 var mealR = sequelize.define('mealR',orm.MealRequirement);
+
+mrCategory.hasMany(mealR);
+mealR.belongsTo(mrCategory);
+
 var customerMR =  sequelize.define('customerMR',orm.CustomerMealRequirement);
 var driver = sequelize.define('driver',orm.Driver);
 var staff = sequelize.define('staff',orm.Staff);
@@ -45,10 +49,8 @@ driver.sync();
 staff.sync();
 
 exports.customer = customer;
-
- //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
-
-
+exports.mrCategory = mrCategory;
+exports.mealR = mealR;
 
 require('./router/main')(app);
 
@@ -57,8 +59,6 @@ app.set('views',__dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 	
-app.use(express.static(__dirname + '/public'));
-
-var server     =    app.listen(3000,function(){
-console.log("Express is running on port 3000");
+var server = app.listen(3000,function(){
+    console.log("Express is running on port 3000");
 });

@@ -10,7 +10,7 @@ exports.Customer = {  //module.exports so the server.js file can access
 		autoIncrement:true,
 		type:Sequelize.INTEGER,
 		primaryKey:true,
-		field:'customer_id'
+		field:'customerID'
 	},
 	customerNumber:{
 		type:Sequelize.INTEGER,
@@ -18,11 +18,11 @@ exports.Customer = {  //module.exports so the server.js file can access
 	},
 	firstName:{
 		type:Sequelize.STRING,
-		field: 'first_name' //the physical table atrribute
+		field: 'firstName' //the physical table atrribute
 	},
 	lastName:{
 		type:Sequelize.STRING,
-		field: 'last_name' 
+		field: 'lastName'
 	},
 	address:{
 		type:Sequelize.STRING,
@@ -34,11 +34,11 @@ exports.Customer = {  //module.exports so the server.js file can access
 	}, 
 	phoneNumber:{
 		type:Sequelize.STRING,
-		field:'phone'
+		field:'phoneNumber'
 	},
 	customerStatus:{   //active, not active, dead
 		type:Sequelize.STRING,
-		field:'status'
+		field:'customerStatus'
 	},
 	bio:{
 		type:Sequelize.STRING,
