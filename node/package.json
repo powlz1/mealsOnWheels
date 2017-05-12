@@ -15,6 +15,12 @@
     "sequelize": "^3.30.2",
     "sqlite3": "^3.1.8",
     "tedious": "^1.14.0",
-	"body-parser":"*"
+	  "body-parser":"*",
+    "connect-ensure-login": "*",
+    "cookie-parser": "*",
+    "express-session": "*",
+    "morgan": "*",
+    "passport": "*",
+    "passport-local": "*"
   }
 }

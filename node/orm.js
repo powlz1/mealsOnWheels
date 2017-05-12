@@ -55,6 +55,33 @@ exports.Customer = {  //module.exports so the server.js file can access
 		
 };
 
+//Create user
+exports.User = {  //module.exports so the server.js file can access
+	userID:{
+		autoIncrement:true,
+		type:Sequelize.INTEGER,
+		primaryKey:true,
+		field:'userID'
+	},
+	firstName:{
+		type:Sequelize.STRING,
+		field: 'firstName' //the physical table atrribute
+	},
+	lastName:{
+		type:Sequelize.STRING,
+		field: 'lastName'
+	},
+	email:{
+		type:Sequelize.STRING,
+		field:'email'
+	}, 
+	passwd:{
+		type:Sequelize.STRING,
+		field:'passwd'
+	}, 
+		
+};
+
 exports.CustomerDay = {
 	customerDayID:{
 		autoIncrement:true,
