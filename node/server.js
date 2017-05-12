@@ -15,7 +15,7 @@ var bodyParser = 	require('body-parser');
 }));
 
 //initialising javascript - http://docs.sequelizejs.com/en/v3/docs/getting-started/
-var sequelize = new Sequelize('mow', 'root', '1234', {
+var sequelize = new Sequelize('mow', 'root', '1234', { //change the second 
   host: 'localhost',
   dialect: 'mysql',
 
@@ -29,7 +29,7 @@ var sequelize = new Sequelize('mow', 'root', '1234', {
 var customer = sequelize.define('customer',orm.Customer);
 var customerDay = sequelize.define('customerDay',orm.CustomerDay);
 var mrCategory = sequelize.define('MRcategory',orm.MealRequirementCategory);
-var mealR = sequelize.define('mealR',orm.MealRequirement);
+var mealR = sequelize.define('mealRs',orm.MealRequirement);
 
 mrCategory.hasMany(mealR);
 mealR.belongsTo(mrCategory);
