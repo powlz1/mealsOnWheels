@@ -24,7 +24,7 @@ module.exports = function(app)
 		
 		customer.findAll()
 		.then(function(customers){
-				res.render('main.ejs', {page:"viewCustomers", customers:customers});
+			res.render('main.ejs', {page:"viewCustomers", customers:customers});
  		});
 	});
 	
