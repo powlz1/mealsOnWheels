@@ -1,7 +1,19 @@
 <table>
+    <thead>
+        <tr>
+            <th>Customer #</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Notes</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
 		<% if (typeof customers != 'undefined') { %>
-		<% customers.forEach(function(customer){ %>
-			<% include customer.ejs %>
-		<% }); %>
-		<% } %>	
+	    	<% customers.forEach(function(customer){ %>
+		    	<% include customer.ejs %>
+		    <% }); %>
+		<% } %>
+	</tbody>
 </table>

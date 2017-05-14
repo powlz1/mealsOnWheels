@@ -12,7 +12,7 @@
     <div class="row">
             <div class="col-md-4 mt-4" ng-repeat="cat in mrcats">
                 <div class="card" ng-controller="ngClickCtrl">
-                    <h3 class="card-header">{{ cat.category }}</h3>
+                    <h3 class="card-header bg-success text-white">{{ cat.category }} <span class="close text-white" ng-click="deleteCategory(cat)">&times;</span></h3>
                     <div class="card-block">
                         <form class="form-inline input-group">
                             <input class="form-control" ng-model="newMR" placeholder="Add new meal requirement"/>
@@ -20,8 +20,8 @@
                                 <button type="submit" class="btn btn-secondary" ng-click="addNewMR(cat)">Add</button>
                             </span>
                         </form>
-                        <ul class="mt-4">
-                            <li ng-repeat="mealr in cat.mealRs">{{ mealr.requirement }}</li>
+                        <ul class="mt-4 mealRList">
+                            <li ng-repeat="mealr in cat.mealRs">{{ mealr.requirement }} <span class="close" ng-click="deleteCategory(cat)">&times;</span></li>
                         </ul>
                     </div>
                 </div>
@@ -42,6 +42,7 @@ app.controller('ngClickCtrl', function ($scope, $http) {
         {
             $http.post("/addNewMRCategory",{newMRCat:$scope.newMRCat}).then(function(response){
                 $scope.mrcats.push(response.data.mrcat);
+                $scope.newMRCat = '';
             });
         }
     }
@@ -50,9 +51,17 @@ app.controller('ngClickCtrl', function ($scope, $http) {
         if($scope.newMR.length !== 0)
         {
             $http.post("/addNewMR",{newMR:$scope.newMR, categoryID:category.mealRequirementCategoryID}).then(function(response){
+                if(typeof category.mealRs == 'undefined')
+                    category.mealRs = [];
+
                 category.mealRs.push(response.data.mr);
+                $scope.newMR = '';
             });
         }
+    }
+
+    $scope.deleteCategory = function(category){
+        console.log("deleting!!!!@#!@2");
     }
 });
 
