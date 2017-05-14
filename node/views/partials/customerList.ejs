@@ -1,7 +1,7 @@
-<ul>
-	<% if (typeof customers != 'undefined') { %>
+<table>
+		<% if (typeof customers != 'undefined') { %>
 		<% customers.forEach(function(customer){ %>
 			<% include customer.ejs %>
 		<% }); %>
-	<% } %>		
-</ul>
+		<% } %>	
+</table>
