@@ -1,4 +1,4 @@
-body { font-family: 'Raleway', sans-serif; }
+body { font-family: 'Raleway', sans-serif;background-image:url('/img/stew.jpg');background-size:cover;background-repeat:no-repeat; }
 
 table { width:100% }
 th { border: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;padding: .5rem; }
