@@ -1,9 +1,8 @@
 body { font-family: 'Raleway', sans-serif;background:url('/img/stew.jpg') no-repeat center center fixed;background-size:cover; }
 
-table { width:100% }
-th { border: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;padding: .5rem; }
-td { border-bottom: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;padding: .5rem; }
-tr:nth-child(odd) td {background:#f1f6f9}
+table { width:100%; border-bottom:1px solid #ccc; }
+th, td { border-left: 1px solid #ccc;border-right: 1px solid #ccc;padding: .5rem; }
+tr:nth-child(even) td {background:#f1f6f9}
 tr td:last-child {text-align:right}
 
 .close { float:right; text-shadow:none!important;opacity:1!important }

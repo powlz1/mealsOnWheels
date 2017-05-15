@@ -100,4 +100,14 @@ module.exports = function(app)
 			});
 		});
 	});
+
+	//API url for mobile app
+	app.get("/getAddresses", function(req,res){
+		//need to add check that this is being accessed by app only
+		//also need to filter this list to provide only the customers for today, + eventually for a particular driver
+		customer.findAll()
+		.then(function(customers){
+			res.send(JSON.stringify({ customers:customers }));
+		});
+	});
 }
