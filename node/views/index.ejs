@@ -138,10 +138,11 @@ function ($scope, $compile, $timeout, uiCalendarConfig) {
 
 <div class="row">
 
-	<div class="col-md-10 pl-4 pr-4" ng-app='mow'>
-		<div ng-controller="CalendarCtrl" class="ng-scope">
+	<div class="col-md-10" ng-app='mow' style="padding:0">
+		<img src="/img/stew.jpg" class="img-fluid" alt="Responsive image">
+		<!--<div ng-controller="CalendarCtrl" class="ng-scope">
 			<div ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources"></div>
-		</div>
+		</div> -->
 	</div>
 	
 	<%- include common/sidebar.ejs %>
