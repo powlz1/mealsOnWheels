@@ -1,1 +1,4 @@
 body { font-family: 'Raleway', sans-serif; }
+table{margin:40px;border:2px black solid;}
+tr,th,td{
+border:2px black solid;padding:10px;}

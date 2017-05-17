@@ -1,10 +1,10 @@
-<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats) %>'>
+<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats) %>' ng-controller="CustomerCtrl">
     <div class="col-md-6 mt-4">
-        <div ng-controller="CustomerCtrl">
+        <div>
             <div class="card">
                 <h3 class="card-header bg-success text-white">Customer details</h3>
                 <div class="card-block">
-                    <form ng-submit="search()">
+                    <form ng-submit="addCustomer()">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -12,6 +12,7 @@
                                     <select class="form-control" id="customerStatus">
                                         <option value="active">Active</option>
                                         <option value="notActive">Not active</option>
+                                        <option value="dead">Dead</option>
                                     </select>
                                 </div>
                             </div>
@@ -52,7 +53,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 mt-4">
+    <div class="col-md-6 mt-4" >
         <div class="row">
             <div class="col-md-4" ng-repeat="cat in mrcats">
                 <div class="card">
@@ -60,7 +61,7 @@
                     <div class="card-block">
                         <div ng-repeat="mealr in cat.mealRs">
                             <div class="form-group">
-                                <input type="checkbox" />
+                                <input type="checkbox" ng-model="mealRequirements[mealr.mealRequirementID]" value="{{mealr.mealRequirementID}}" onclick=""/>
                                 <label>{{ mealr.requirement }}</label>
                             </div>
                         </div>
@@ -80,7 +81,20 @@
       $scope.user = {};
       $scope.results = [];
 	  
-      $scope.search = function () {
+	  $scope.mealRequirements = {};
+	  
+	  
+	  
+      $scope.addCustomer = function () {
+	  $scope.results = [];
+		  angular.forEach($scope.mealRequirements,function(key,value){
+				if(key)
+					$scope.results.push(value)
+			});
+	  
+	  console.log($scope.results);
+	  
+	  
 	   var customerNumber = parseInt(document.getElementById("customerNumber").value);
 	   var firstName = document.getElementById("firstName").value;
 	   var lastName = document.getElementById("lastName").value;
@@ -95,23 +109,26 @@
           /* the $http service allows you to make arbitrary ajax requests.
            * in this case you might also consider using angular-resource and setting up a
            * User $resource. */
-		   console.log("clicked");
 
-          $http.post('/addCustomers', { 
-										"customerNumber" : customerNumber,
-										"firstName" : firstName,
-										"lastName" : lastName,
-										"address" : address,
-										"email" : email,
-										"phoneNumber" : phoneNumber,
-										"bio" : bio,
-										"photo" : photo,
-										"customerStatus" : customerStatus,
-										"adminNotes" : adminNotes
+          $http.post('/addCustomers', {customer:{ 
+											"customerNumber" : customerNumber,
+											"firstName" : firstName,
+											"lastName" : lastName,
+											"address" : address,
+											"email" : email,
+											"phoneNumber" : phoneNumber,
+											"bio" : bio,
+											"photo" : photo,
+											"customerStatus" : customerStatus,
+											"adminNotes" : adminNotes
+										},
+										"mealRequirements":$scope.results
 										},
             function (response) { $scope.results = response; },
             function (failure) { console.log("failed : ", failure ); });
       }
   }]);
+  
+		
 
 </script>

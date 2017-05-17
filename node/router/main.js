@@ -29,11 +29,12 @@ module.exports = function(app)
 	});
 	
 	app.post('/addCustomers', function (req, res){
-		console.log(req.body);
+		console.log(req.body.mealRequirements);
 		console.log ('POST /addCustomers');
+		
 
 		customer.create( //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
-			req.body
+			req.body.customer
 		).then(function(customer){
 			res.send(JSON.stringify({ customer: customer }));
 		});

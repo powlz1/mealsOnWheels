@@ -29,16 +29,16 @@ var sequelize = new Sequelize('mow', 'root', '1234', {
 var customer = sequelize.define('customer',orm.Customer);
 var customerDay = sequelize.define('customerDay',orm.CustomerDay);
 var mrCategory = sequelize.define('MRcategory',orm.MealRequirementCategory);
-var mealR = sequelize.define('mealR',orm.MealRequirement);
-
-mrCategory.hasMany(mealR);
-mealR.belongsTo(mrCategory);
-
+var mealR = sequelize.define('mealRs',orm.MealRequirement);
 var customerMR =  sequelize.define('customerMR',orm.CustomerMealRequirement);
 var driver = sequelize.define('driver',orm.Driver);
 var staff = sequelize.define('staff',orm.Staff);
 
-var tableCreate=true;
+
+mrCategory.hasMany(mealR);
+mealR.belongsTo(mrCategory);
+customer.hasMany(customerMR);
+customerMR.belongsTo(customer);
 
 customer.sync();
 customerDay.sync();
