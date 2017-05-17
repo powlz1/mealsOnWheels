@@ -86,47 +86,47 @@
 	  
 	  
       $scope.addCustomer = function () {
-	  $scope.results = [];
-		  angular.forEach($scope.mealRequirements,function(key,value){
+		$scope.results = [];
+			angular.forEach($scope.mealRequirements,function(key,value){
 				if(key)
 					$scope.results.push(value)
 			});
 	  
-	  console.log($scope.results);
+		console.log($scope.results);
 	  
 	  
-	   var customerNumber = parseInt(document.getElementById("customerNumber").value);
-	   var firstName = document.getElementById("firstName").value;
-	   var lastName = document.getElementById("lastName").value;
-	   var address = document.getElementById("address").value;
-	   var email = document.getElementById("email").value;
-	   var phoneNumber = document.getElementById("phoneNumber").value;
-	   var bio = document.getElementById("bio").value;
-	   var photo = document.getElementById("photo").value;
-	   var customerStatus = document.getElementById("customerStatus").value;
-	   var adminNotes = document.getElementById("adminNotes").value;
-	  
-          /* the $http service allows you to make arbitrary ajax requests.
-           * in this case you might also consider using angular-resource and setting up a
-           * User $resource. */
+		   var customerNumber = parseInt(document.getElementById("customerNumber").value);
+		   var firstName = document.getElementById("firstName").value;
+		   var lastName = document.getElementById("lastName").value;
+		   var address = document.getElementById("address").value;
+		   var email = document.getElementById("email").value;
+		   var phoneNumber = document.getElementById("phoneNumber").value;
+		   var bio = document.getElementById("bio").value;
+		   var photo = document.getElementById("photo").value;
+		   var customerStatus = document.getElementById("customerStatus").value;
+		   var adminNotes = document.getElementById("adminNotes").value;
+		  
+			  /* the $http service allows you to make arbitrary ajax requests.
+			   * in this case you might also consider using angular-resource and setting up a
+			   * User $resource. */
 
-          $http.post('/addCustomers', {customer:{ 
-											"customerNumber" : customerNumber,
-											"firstName" : firstName,
-											"lastName" : lastName,
-											"address" : address,
-											"email" : email,
-											"phoneNumber" : phoneNumber,
-											"bio" : bio,
-											"photo" : photo,
-											"customerStatus" : customerStatus,
-											"adminNotes" : adminNotes
-										},
-										"mealRequirements":$scope.results
-										},
-            function (response) { $scope.results = response; },
-            function (failure) { console.log("failed : ", failure ); });
-      }
+			  $http.post('/addCustomers', {customer:{ 
+												"customerNumber" : customerNumber,
+												"firstName" : firstName,
+												"lastName" : lastName,
+												"address" : address,
+												"email" : email,
+												"phoneNumber" : phoneNumber,
+												"bio" : bio,
+												"photo" : photo,
+												"customerStatus" : customerStatus,
+												"adminNotes" : adminNotes
+											},
+											"mealRequirements":$scope.results
+											},
+				function (response) { $scope.results = response; },
+				function (failure) { console.log("failed : ", failure ); });
+		  }
   }]);
   
 		
