@@ -5,5 +5,6 @@ Name: <%= user.displayName %><br/>
 <% if (user.emails) { %>
 Email: <%= user.emails[0].value %><br/>
 <% } %>
+isAdmin: <%= user.isAdmin %><br/>
 </p>
 <a href="/logout">Log out</a>
