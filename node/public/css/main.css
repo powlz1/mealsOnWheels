@@ -1,13 +1,16 @@
 body { font-family: 'Raleway', sans-serif;background:url('/img/stew.jpg') no-repeat center center fixed;background-size:cover; }
 
-table { width:100%; border-bottom:1px solid #ccc; }
+table { width:100%; border-top:1px solid #ccc;border-bottom:1px solid #ccc; }
 th, td { border-left: 1px solid #ccc;border-right: 1px solid #ccc;padding: .5rem; }
 td { background:white }
 tr:nth-child(even) td {background:#f1f6f9}
 tr td:last-child {text-align:right}
+
+table.customerDay th, table.customerDay tr td:not(:first-of-type) { text-align:center }
 
 .close { float:right; text-shadow:none!important;opacity:1!important }
 
 .mealRList { list-style:none;padding:0 }
 .mealRList li { padding: .3rem;border-bottom: 1px solid #eee; }
 .mealRList li .close { color:#555 }
+

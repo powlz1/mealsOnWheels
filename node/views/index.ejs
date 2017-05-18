@@ -141,6 +141,15 @@ function ($scope, $compile, $timeout, uiCalendarConfig) {
 	<div class="col-md-10 pr-4 pl-4" ng-app='mow' style="padding:0">
 		<h3 class="pt-4" style="margin-bottom:-10px">Welcome to</h3>
 		<h1 class="display-4">Meals on Wheels</h1>
+		<p>
+			Today is <span><%= today %></span>
+		</p>
+		<p>
+			Today's meals:<br/>
+			<% customerDays.forEach(function(e){%>
+				<%= e.dataValues['key'] %> <%= e.dataValues["count"] %><br/>
+			<% }); %>
+		</p>
 		<!--<div ng-controller="CalendarCtrl" class="ng-scope">
 			<div ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources"></div>
 		</div> -->

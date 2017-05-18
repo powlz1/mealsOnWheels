@@ -1,10 +1,10 @@
-<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats); %>' ng-controller="CustomerCtrl">
+<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats); %>; customer = <%- JSON.stringify(customer); %>' ng-controller="CustomerCtrl">
     <div class="col-md-6 mt-4">
         <div>
             <div class="card">
                 <h3 class="card-header bg-success text-white">Customer details</h3>
                 <div class="card-block">
-                    <form ng-submit="addCustomer()">
+                    <form>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -18,35 +18,52 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="customerNumber">Customer number</label>
-                                    <input type="text" id="customerNumber" class="form-control" <% if(locals.customers && locals.customers[0]){%>value="<%- customers[0]["customerNumber"] %>"<% } %> />
+                                    <input type="text" id="customerNumber" class="form-control" value="<%- customer["customerNumber"] %>" ng-model="saveCustomer['customerNumber']"/>
                                 </div>
                             </div>
                         </div>
-                        <% field = {fieldId:"firstName",fieldName: "First name"};%>
-                        <% include partials/customerInput.ejs %>
 
-                        <% field = {fieldId:"lastName",fieldName: "Last name"}; %>
+                        <% field = [{fieldId:"firstName",fieldName: "First name"},{fieldId:"lastName",fieldName: "Last name"}];%>
                         <% include partials/customerInput.ejs %>
 
                         <% field = {fieldId:"address",fieldName: "Address"}; %>
                         <% include partials/customerTextarea.ejs %>
 
-                        <% field = {fieldId:"email",fieldName: "Email address"}; %>
-                        <% include partials/customerInput.ejs %>
-
-                        <% field = {fieldId:"phoneNumber",fieldName: "Phone number"}; %>
-                        <% include partials/customerInput.ejs %>
-
-                        <% field = {fieldId:"bio",fieldName: "Bio"}; %>
-                        <% include partials/customerTextarea.ejs %>
-
-                        <% field = {fieldId:"photo",fieldName: "Photo"}; %>
+                        <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phoneNumber",fieldName: "Phone number"}]; %>
                         <% include partials/customerInput.ejs %>
 
                         <% field = {fieldId:"adminNotes",fieldName: "Admin notes"} ;%>
                         <% include partials/customerTextarea.ejs %>
 
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <% rows = [ {name:"Standard meal", key:"standardMeal"},
+                                    {name:"Named meal", key:"namedMeal"},
+                                    {name:"Dessert", key:"dessert"},
+                                    {name:"Soup", key:"soup"},
+                                    {name:"Sandwiches", key:"sandwiches"},
+                                    {name:"Fruit", key:"fruit"},
+                                    {name:"Baking", key:"baking"},
+                                    {name:"Savouries", key:"savouries"},
+                                    {name:"Frozen meal", key:"frozenMeal"},
+                                    {name:"Frozen desserts", key:"frozenDesserts"},
+                                    {name:"Other", key:"other"}
+                                    ] ;%>
+
+                        <table class="mt-4 customerDay">
+                            <tr>
+                                <th></th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wednesday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                                <th>Saturday</th>
+                                <th>Sunday</th>
+                            </tr>
+                            <% for (var i=0;i<rows.length;i++){%>
+                                <% row = rows[i]; %>
+                                <% include partials/customerDayTr.ejs %>
+                            <% } %>
+                        </table>
                     </form>
                 </div>
             </div>
@@ -62,10 +79,14 @@
                     <h3 class="card-header bg-inverse text-white" data-toggle="collapse" data-target="#block_{{ cat.id }}">{{ cat.category }} <span class="close text-white" ng-click="minimise(cat)">-</span></h3>
                     <div id="block_{{ cat.id }}" class="collapse">
                         <div class="card-block">
-                            <div ng-repeat="mealr in cat.mealRequirements">
-                                <div class="form-group">
-                                    <input type="checkbox" id="checkbox_{{ mealr.id }}" ng-model="mealRequirements[mealr.id]" value="{{mealr.id}}"/>
-                                    <label for="checkbox_{{ mealr.id }}">{{ mealr.requirement }}</label>
+                            <div class="row">
+                                <div class="col-md-6" ng-repeat="mealr in cat.mealRequirements">
+                                    <div class="form-group">
+                                        <input type="checkbox" id="checkbox_{{ mealr.id }}" ng-model="mealRequirements[mealr.id]" value="{{mealr.id}}"
+                                                ng-checked="findRequirement(customer,mealr);"
+                                        />
+                                        <label for="checkbox_{{ mealr.id }}">{{ mealr.requirement }}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -74,58 +95,47 @@
             </div>
         </div>
     </div>
+    <div style="position:fixed;top:0;right:0;padding:10px;">
+        <input type="button" value="Save" class="btn btn-primary" ng-click="addCustomer()"/>
+    </div>
 </div>
 
 <script type="text/javascript">
 
-    angular.module('AddCustomer', [])
-    .controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
+    angular.module('AddCustomer', []).controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
+        $scope.saveCustomer = {};
+        $scope.mealRequirements = {};
+        $scope.customerRequirements = [];
+        $scope.customerDay = {};
 
+        $scope.findRequirement = function(customer, mealr){
+            var found = false;
+            if(customer.mealRequirements)
+                for(var i=0;i<customer.mealRequirements.length;i++) {
+                    if (customer.mealRequirements[i].id == mealr.id) {
+                        found = true;
+                        break;
+                    }
+                }
+            return found;
+        };
 
-      $scope.customer = {};
-      $scope.mealRequirements = {};
-      $scope.customerRequirements = [];
+        $scope.addCustomer = function () {
+            console.log($scope.customerDay);
+            $scope.customerRequirements = [];
+            angular.forEach($scope.mealRequirements, function(key,value){
+                 if(key)
+                    $scope.customerRequirements.push(value);
+            });
 
-      $scope.addCustomer = function () {
-          $scope.customerRequirements = [];
-          angular.forEach($scope.mealRequirements, function(key,value){
-             if(key)
-                 $scope.customerRequirements.push(value);
-          });
-          console.log($scope.customerRequirements);
-	    var customerNumber = parseInt(document.getElementById("customerNumber").value);
-	    var firstName = document.getElementById("firstName").value;
-	    var lastName = document.getElementById("lastName").value;
-	    var address = document.getElementById("address").value;
-	    var email = document.getElementById("email").value;
-	    var phoneNumber = document.getElementById("phoneNumber").value;
-	    var bio = document.getElementById("bio").value;
-	    var photo = document.getElementById("photo").value;
-	    var customerStatus = document.getElementById("customerStatus").value;
-        var adminNotes = document.getElementById("adminNotes").value;
-	  
-        /* the $http service allows you to make arbitrary ajax requests.
-         * in this case you might also consider using angular-resource and setting up a
-         * User $resource. */
-        console.log("clicked");
-
-        $http.post('/addCustomers', {customer: {
-                    "customerNumber": customerNumber,
-                    "firstName": firstName,
-                    "lastName": lastName,
-                    "address": address,
-                    "email": email,
-                    "phoneNumber": phoneNumber,
-                    "bio": bio,
-                    "photo": photo,
-                    "customerStatus": customerStatus,
-                    "adminNotes": adminNotes
-                },
-            "mealRequirements":$scope.customerRequirements
+            $http.post('/addCustomers', {
+                "customer": $scope.saveCustomer,
+                "mealRequirements":$scope.customerRequirements,
+                "customerDay" : $scope.customerDay
 			},
             function (response) { $scope.results = response; },
             function (failure) { console.log("failed : ", failure ); });
-      }
-  }]);
+        }
+    }]);
 
 </script>

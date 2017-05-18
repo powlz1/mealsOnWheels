@@ -6,18 +6,42 @@ var db = require('../db.js');
 var customer = db.customer;
 var mealRequirementCategory = db.mealRequirementCategory;
 var mealRequirement = db.mealRequirement;
-//var customerMR = db.customerMR;
+var customerDay = db.customerDay;
+
+//utility day array
+var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 module.exports = function(app)
 {
 	app.get('/', function (req, res){
 		console.log ('GET /');
-		res.render('main.ejs', {page:"index"});
+		var today = days[new Date().getDay()];
+
+		customerDay.findAll({
+			where:{
+				day:today
+			},
+			attributes: ['key',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+			group: ["key"]
+		}).then(function(customerDays){
+			console.log(customerDays);
+			res.render('main.ejs', {page:"index", today:today, customerDays:customerDays});
+		});
 	});	
 	
 	app.get('/index', function (req, res){
 		console.log ('GET /index');
-		res.render('main.ejs', {page:"index"});
+		var today = days[new Date().getDay()];
+		customerDay.findAll({
+			where:{
+				day:today
+			},
+			attributes: ['key',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+			group: ["key"]
+		}).then(function(customerDays){
+			console.log(customerDays);
+			res.render('main.ejs', {page:"index", today:today, customerDays:customerDays});
+		});
 	});
 	
 	app.get('/viewCustomers', function (req, res){
@@ -41,18 +65,31 @@ module.exports = function(app)
 					id:req.body.mealRequirements
 				}
 			}).then(function(mealRequirements){
-				customer.addMealRequirements(mealRequirements);
-				res.send(JSON.stringify({ customer: customer }));
+				customer.addMealRequirements(mealRequirements).then(function(){
+					var customerDays = [];
+					var dayKeys = Object.keys(req.body.customerDay);
+
+					dayKeys.forEach(function(day){
+						var obj = req.body.customerDay[day];
+						var mealKeys = Object.keys(obj);
+						mealKeys.forEach(function(key){
+							var c = {'day':day,'key':key,'customerId':customer.id};
+							customerDays.push(c);
+						});
+					});
+					customerDay.bulkCreate(customerDays).then(function(cDays){
+						res.send(JSON.stringify({ customer: customer }));
+					})
+				});
 			})
 		});
 	});
-	
 
 	app.get('/addCustomer', function (req, res){
 		console.log ('GET /addCustomer');
 		mealRequirementCategory.findAll({include:[mealRequirement]})
 			.then(function(mrcats){
-				res.render('main.ejs', {page:"addCustomer", mrcats:mrcats});
+				res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:{}});
 			});
 	});
 
@@ -67,7 +104,7 @@ module.exports = function(app)
 					},
 					include:[mealRequirement]
 				}).then(function(customers){
-					res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customers:customers});
+					res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:customers[0]});
 				});
 			});
 	});

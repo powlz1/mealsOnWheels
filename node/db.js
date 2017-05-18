@@ -28,8 +28,11 @@ db.driver = require('./models/driver.js')(sequelize, Sequelize);
 db.mealRequirement.belongsTo(db.mealRequirementCategory);
 db.mealRequirementCategory.hasMany(db.mealRequirement);
 
-db.mealRequirement.belongsToMany( db.customer, {through: "customerMealRequirement"});
+db.mealRequirement.belongsToMany(db.customer, {through: "customerMealRequirement"});
 db.customer.belongsToMany(db.mealRequirement, {through: "customerMealRequirement"});
+
+db.customerDay.belongsTo(db.customer);
+db.customer.hasMany(db.customerDay);
 
 //create if not exists
 db.sequelize.sync();

@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
         day: {
             type: DataTypes.STRING,
             field: 'day'
+        },
+        key: {
+            type: DataTypes.STRING,
+            field: 'key'
         }
     });
 
