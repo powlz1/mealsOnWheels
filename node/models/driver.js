@@ -6,22 +6,18 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey:true,
             field:'id'
         },
-        username:{
-            type:DataTypes.STRING,
-            field:'username'
+		driverStatus:{
+			type:DataTypes.STRING,
+            field:'driverStatus'
         },
-        password:{
-            type:DataTypes.STRING,
-            field: 'password'
-        },
-        email:{
-            type:DataTypes.STRING,
-            field:'email'
-        },
-        phone:{
-            type:DataTypes.STRING,
-            field:'phone'
-        }
+		licenceNumber:{
+			type:DataTypes.INTEGER,
+			field:'licenceNumber'
+		},
+		licencePlate:{
+			type:DataTypes.STRING,
+			field:'licencePlate'
+		}
     });
 
     return Driver;
