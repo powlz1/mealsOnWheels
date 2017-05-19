@@ -1,10 +1,12 @@
+/*var orm 	   =  	require('../orm.js');
+var Sequelize  =    require('sequelize');
+var customer = Sequelize.define('customer',orm.Customer);*/
+
 var db = require('../db.js');
-var user = db.user;
 var customer = db.customer;
 var mealRequirementCategory = db.mealRequirementCategory;
 var mealRequirement = db.mealRequirement;
 var customerDay = db.customerDay;
-var driver = db.driver;
 
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -38,7 +40,14 @@ module.exports = function(app)
 			group: ["key"]
 		}).then(function(customerDays){
 			console.log(customerDays);
-			res.render('main.ejs', {page:"index", today:today, customerDays:customerDays});
+			
+			customerDay.findAll({
+				attributes: ['key','day',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+				group: ["key", "day"]
+			}).then(function(allCustomerDays){
+				res.render('main.ejs', {page:"index", today:today, customerDays:customerDays,allCustomerDays:allCustomerDays});
+			});
+			
 		});
 	});
 	
@@ -51,65 +60,35 @@ module.exports = function(app)
  		});
 	});
 	
-	app.get('/maps', function (req, res){
-		console.log ('GET /maps');
-
-			res.render('main.ejs', {page:"maps"});
-	});
-	
-	app.get('/deleteCustomer/:customerID', function (req, res){
-	var customerID = req.params.customerID;
-	//connection.query('DELETE FROM customers WHERE customerID=customerID');
-	mrCategory.findAll({include:[mealR]})
-	.then(function(mrcats){
-	customer.findAll({
-	where:{
-	customerID:customerID
-	}
-	}).then(function(customers){
-	res.render('main.ejs', {page:"viewCustomer", mrcats:mrcats, customers:customers});
-	});
-	});
-	});
-	
 	app.post('/addCustomers', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addCustomers');
-		var c = req.body.customer;
-		
-		user.create(
-			req.body.user
-		).then(function(user){
-			c.userId = user.id;
-			customer.create( 
-				c
-			).then(function(customer){
-				
-				
-				mealRequirement.findAll({
-					where:{
-						id:req.body.mealRequirements
-					}
-				}).then(function(mealRequirements){
-					customer.addMealRequirements(mealRequirements).then(function(){
-						var customerDays = [];
-						var dayKeys = Object.keys(req.body.customerDay);
 
-						dayKeys.forEach(function(day){
-							var obj = req.body.customerDay[day];
-							var mealKeys = Object.keys(obj);
-							mealKeys.forEach(function(key){
-								var c = {'day':day,'key':key,'customerId':customer.id};
-								customerDays.push(c);
-							});
+		customer.create( //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
+			req.body.customer
+		).then(function(customer){
+			mealRequirement.findAll({
+				where:{
+					id:req.body.mealRequirements
+				}
+			}).then(function(mealRequirements){
+				customer.addMealRequirements(mealRequirements).then(function(){
+					var customerDays = [];
+					var dayKeys = Object.keys(req.body.customerDay);
+
+					dayKeys.forEach(function(day){
+						var obj = req.body.customerDay[day];
+						var mealKeys = Object.keys(obj);
+						mealKeys.forEach(function(key){
+							var c = {'day':day,'key':key,'customerId':customer.id};
+							customerDays.push(c);
 						});
-						customerDay.bulkCreate(customerDays).then(function(cDays){
-							res.send(JSON.stringify({ customer: customer }));
-							
-						});
+					});
+					customerDay.bulkCreate(customerDays).then(function(cDays){
+						res.send(JSON.stringify({ customer: customer }));
 					})
 				});
-			});
+			})
 		});
 	});
 
@@ -182,28 +161,6 @@ module.exports = function(app)
 		customer.findAll()
 		.then(function(customers){
 			res.send(JSON.stringify({ customers:customers }));
-		});
-	});
-	
-	app.get('/addDriver', function (req, res){
-		console.log ('GET /addDriver');
-		res.render('main.ejs', {page:"addDriver", driver:{}});
-	});
-	
-	app.post('/addDriver', function (req, res){
-		console.log(req.body);
-		console.log ('POST /addDriver');
-		var d = req.body.driver;
-		
-		user.create(
-			req.body.user
-		).then(function(user){
-			d.userId = user.id;
-			driver.create( 
-				d
-			).then(function(driver){
-				res.send(JSON.stringify({ driver: driver }));
-			});	
 		});
 	});
 }

@@ -22,10 +22,6 @@
                                 </div>
                             </div>
                         </div>
-						
-						
-                        <% field = [{fieldId:"username",fieldName: "Username"}, {fieldId:"password",fieldName: "Password"}]; %>
-                        <% include partials/customerInput.ejs %>
 
                         <% field = [{fieldId:"firstName",fieldName: "First name"},{fieldId:"lastName",fieldName: "Last name"}];%>
                         <% include partials/customerInput.ejs %>
@@ -33,7 +29,7 @@
                         <% field = {fieldId:"address",fieldName: "Address"}; %>
                         <% include partials/customerTextarea.ejs %>
 
-                        <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phone",fieldName: "Phone number"}]; %>
+                        <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phoneNumber",fieldName: "Phone number"}]; %>
                         <% include partials/customerInput.ejs %>
 
                         <% field = {fieldId:"adminNotes",fieldName: "Admin notes"} ;%>
@@ -108,7 +104,6 @@
 
     angular.module('AddCustomer', []).controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
         $scope.saveCustomer = {};
-        $scope.saveUser = {};
         $scope.mealRequirements = {};
         $scope.customerRequirements = [];
         $scope.customerDay = {};
@@ -132,12 +127,8 @@
                  if(key)
                     $scope.customerRequirements.push(value);
             });
-			
-			console.log($scope.saveCustomer, $scope.saveUser);
-			
 
             $http.post('/addCustomers', {
-				"user": $scope.saveUser,
                 "customer": $scope.saveCustomer,
                 "mealRequirements":$scope.customerRequirements,
                 "customerDay" : $scope.customerDay
