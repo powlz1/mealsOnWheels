@@ -18,7 +18,17 @@
                         </div>
 
                         <% field = [{fieldId:"firstName",fieldName: "First name"},{fieldId:"lastName",fieldName: "Last name"}];%>
-                        <% include partials/driverInput.ejs %>
+                        <% include partials/driverInputSaveUser.ejs %>
+						
+						
+                        <% field = [{fieldId:"username",fieldName: "Username"}, {fieldId:"password",fieldName: "Password"}]; %>
+                        <% include partials/driverInputSaveUser.ejs %>
+						
+                        <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phone",fieldName: "Phone number"}]; %>
+                        <% include partials/driverInputSaveUser.ejs %>
+						
+						<% field = [{fieldId:"licenceNumber",fieldName: "Licence number"}, {fieldId:"licencePlate",fieldName: "Licence plate"}]; %>
+                        <% include partials/driverInputSaveDriver.ejs %>
  
                     </form>
                 </div>
@@ -46,7 +56,7 @@
 
             $http.post('/addDriver', {
 				"user": $scope.saveUser,
-                "customer": $scope.saveDriver
+                "driver": $scope.saveDriver
 			},
             function (response) { $scope.results = response; },
             function (failure) { console.log("failed : ", failure ); });

@@ -172,7 +172,7 @@ module.exports = function(app)
 	app.post('/addDriver', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addDriver');
-		var d = {};
+		var d = req.body.driver;
 		
 		user.create(
 			req.body.user
