@@ -53,6 +53,27 @@ module.exports = function(app)
  		});
 	});
 	
+	app.get('/maps', function (req, res){
+		console.log ('GET /maps');
+
+			res.render('main.ejs', {page:"maps"});
+	});
+	
+	app.get('/deleteCustomer/:customerID', function (req, res){
+	var customerID = req.params.customerID;
+	//connection.query('DELETE FROM customers WHERE customerID=customerID');
+	mrCategory.findAll({include:[mealR]})
+	.then(function(mrcats){
+	customer.findAll({
+	where:{
+	customerID:customerID
+	}
+	}).then(function(customers){
+	res.render('main.ejs', {page:"viewCustomer", mrcats:mrcats, customers:customers});
+	});
+	});
+	});
+	
 	app.post('/addCustomers', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addCustomers');
