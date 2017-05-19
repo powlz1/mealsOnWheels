@@ -4,7 +4,7 @@
     <div class="col-md-<%= col %>">
         <div class="form-group">
             <label for="<%= field[i].fieldId %>"><%= field[i].fieldName %></label>
-            <input class="form-control" type="text" id="<%= field[i].fieldId %>" value="<%- customer[field[i].fieldId] %>" ng-model="saveUser['<%= field[i].fieldId %>']" />
+            <input class="form-control" type="text" id="<%= field[i].fieldId %>" value="<%- driver[field[i].fieldId] %>" ng-model="saveDriver['<%= field[i].fieldId %>']" />
         </div>
     </div>
     <% } %>

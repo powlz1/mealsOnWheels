@@ -22,6 +22,7 @@ db.customer = require('./models/customer.js')(sequelize, Sequelize);
 db.customerDay = require('./models/customerDay.js')(sequelize, Sequelize);
 db.mealRequirement = require('./models/mealRequirement.js')(sequelize, Sequelize);
 db.mealRequirementCategory = require('./models/mealRequirementCategory.js')(sequelize, Sequelize);
+db.user = require('./models/user.js')(sequelize, Sequelize);
 db.driver = require('./models/driver.js')(sequelize, Sequelize);
 
 //Relationships
@@ -34,26 +35,11 @@ db.customer.belongsToMany(db.mealRequirement, {through: "customerMealRequirement
 db.customerDay.belongsTo(db.customer);
 db.customer.hasMany(db.customerDay);
 
+db.user.hasOne(db.customer);
+db.user.hasOne(db.driver);
+
 //create if not exists
 db.sequelize.sync();
 
 module.exports = db;
 
-
-/*
-exports.Staff = {
-	staffID:{
-		autoIncrement:true,
-		type:Sequelize.INTEGER,
-		primaryKey:true, 
-		field:'staffID'
-	},
-	staffType:{
-		type:Sequelize.STRING,
-		field:'StaffType'
-	},
-	staffAvailability:{
-		type:Sequelize.STRING,
-		field:'StaffAvailability'
-	}
-};*/
