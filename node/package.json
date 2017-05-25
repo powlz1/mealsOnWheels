@@ -4,7 +4,8 @@
   "main": "server.js",
   "scripts":
   {
-		"install-dependencies": "npm install"
+		"startup": "npm install",
+		"startup-clean": "npm install && ./clean-MySQL.sh mow"
   },
   "dependencies": {
     "ejs": "~2.5.6",
