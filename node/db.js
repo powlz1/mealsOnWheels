@@ -14,7 +14,9 @@ var sequelize = new Sequelize('mow', 'root', '1234', { //change the second
 });
 
 const db = {};
+// This is the class definition that is being required
 db.Sequelize = Sequelize;
+// This is the instance being created
 db.sequelize = sequelize;
 
 //Models/tables

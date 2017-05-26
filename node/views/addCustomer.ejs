@@ -1,4 +1,4 @@
-<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats); %>; customer = <%- JSON.stringify(customer); %>' ng-controller="CustomerCtrl">
+<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats); %>; customer = <%- JSON.stringify(customer); %>; user = <%- JSON.stringify(user);%>' ng-controller="CustomerCtrl">
     <div class="col-md-6 mt-4">
         <div>
             <div class="card">
@@ -24,13 +24,16 @@
                         </div>
 
                         <% field = [{fieldId:"firstName",fieldName: "First name"},{fieldId:"lastName",fieldName: "Last name"}];%>
-                        <% include partials/customerInput.ejs %>
+                        <% include partials/customerInputAddUser.ejs %>
+						
+                        <% field = [{fieldId:"username",fieldName: "Username"}, {fieldId:"password",fieldName: "Password"}]; %>
+                        <% include partials/customerInputAddUser.ejs %>
 
                         <% field = {fieldId:"address",fieldName: "Address"}; %>
                         <% include partials/customerTextarea.ejs %>
-
+						
                         <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phoneNumber",fieldName: "Phone number"}]; %>
-                        <% include partials/customerInput.ejs %>
+                        <% include partials/customerInputAddUser.ejs %>
 
                         <% field = {fieldId:"adminNotes",fieldName: "Admin notes"} ;%>
                         <% include partials/customerTextarea.ejs %>
@@ -107,6 +110,7 @@
         $scope.mealRequirements = {};
         $scope.customerRequirements = [];
         $scope.customerDay = {};
+		$scope.saveUser ={};
 
         $scope.findRequirement = function(customer, mealr){
             var found = false;
@@ -119,6 +123,7 @@
                 }
             return found;
         };
+		
 
         $scope.addCustomer = function () {
             console.log($scope.customerDay);
@@ -131,7 +136,8 @@
             $http.post('/addCustomers', {
                 "customer": $scope.saveCustomer,
                 "mealRequirements":$scope.customerRequirements,
-                "customerDay" : $scope.customerDay
+                "customerDay" : $scope.customerDay,
+				"user":$scope.saveUser
 			},
             function (response) { $scope.results = response; },
             function (failure) { console.log("failed : ", failure ); });
