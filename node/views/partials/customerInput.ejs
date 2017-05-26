@@ -1,11 +1,8 @@
 <div class="row">
-    <% var col = 12/field.length %>
-    <% for(var i =0;i<field.length;i++){%>
-    <div class="col-md-<%= col %>">
+    <div class="col-md-12">
         <div class="form-group">
-            <label for="<%= field[i].fieldId %>"><%= field[i].fieldName %></label>
-            <input class="form-control" type="text" id="<%= field[i].fieldId %>" value="<%- customer[field[i].fieldId] %>" ng-model="saveCustomer['<%= field[i].fieldId %>']" />
+            <label for="<%= field.fieldId %>"><%= field.fieldName %></label>
+            <input class="form-control" type="text" id="<%= field.fieldId %>" <% if(locals.customers && locals.customers[0]){%>value="<%- customers[0][field.fieldId] %>"<% } %> />
         </div>
     </div>
-    <% } %>
 </div>

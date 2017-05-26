@@ -1,6 +1,6 @@
-<div ng-app="ngClickApp" ng-init='mrcats = <%- JSON.stringify(mrcats); %>'>
+<div ng-app="ngClickApp" ng-init='mrcats = <%- JSON.stringify(mrcats) %>'>
     <div class="row mt-4" ng-controller="ngClickCtrl">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <form class="form-inline input-group">
                 <input class="form-control" id="newMRCat" ng-model="newMRCat" placeholder="Add new meal requirement category"/>
                 <span class="input-group-btn">
@@ -10,22 +10,22 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4 mt-4" ng-repeat="cat in mrcats">
-            <div class="card" ng-controller="ngClickCtrl">
-                <h3 class="card-header bg-success text-white">{{ cat.category }} <span class="close text-white" ng-click="deleteCategory(cat)">&times;</span></h3>
-                <div class="card-block">
-                    <form class="form-inline input-group">
-                        <input class="form-control" ng-model="newMR" placeholder="Add new meal requirement"/>
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-secondary" ng-click="addNewMR(cat)">Add</button>
-                        </span>
-                    </form>
-                    <ul class="mt-4 mealRList">
-                        <li ng-repeat="mealr in cat.mealRequirements">{{ mealr.requirement }} <span class="close" ng-click="deleteCategory(cat)">&times;</span></li>
-                    </ul>
+            <div class="col-md-4 mt-4" ng-repeat="cat in mrcats">
+                <div class="card" ng-controller="ngClickCtrl">
+                    <h3 class="card-header">{{ cat.category }}</h3>
+                    <div class="card-block">
+                        <form class="form-inline input-group">
+                            <input class="form-control" ng-model="newMR" placeholder="Add new meal requirement"/>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-secondary" ng-click="addNewMR(cat)">Add</button>
+                            </span>
+                        </form>
+                        <ul class="mt-4">
+                            <li ng-repeat="mealr in cat.mealRs">{{ mealr.requirement }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>
 
@@ -42,27 +42,17 @@ app.controller('ngClickCtrl', function ($scope, $http) {
         {
             $http.post("/addNewMRCategory",{newMRCat:$scope.newMRCat}).then(function(response){
                 $scope.mrcats.push(response.data.mrcat);
-                $scope.newMRCat = '';
             });
         }
-    };
+    }
 
     $scope.addNewMR = function(category){
-        console.log(category);
         if($scope.newMR.length !== 0)
         {
-            $http.post("/addNewMR",{newMR:$scope.newMR, categoryID:category.id}).then(function(response){
-                if(typeof category.mealRequirements == 'undefined')
-                    category.mealRequirements = [];
-
-                category.mealRequirements.push(response.data.mr);
-                $scope.newMR = '';
+            $http.post("/addNewMR",{newMR:$scope.newMR, categoryID:category.mealRequirementCategoryID}).then(function(response){
+                category.mealRs.push(response.data.mr);
             });
         }
-    };
-
-    $scope.deleteCategory = function(category){
-        console.log("deleting!!!!@#!@2");
     }
 });
 

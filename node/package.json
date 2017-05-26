@@ -4,8 +4,7 @@
   "main": "server.js",
   "scripts":
   {
-		"startup": "npm install",
-		"startup-clean": "npm install && ./clean-MySQL.sh mow"
+		"install-dependencies": "npm install"
   },
   "dependencies": {
     "ejs": "~2.5.6",
@@ -16,6 +15,7 @@
     "sequelize": "^3.30.2",
     "sqlite3": "^3.1.8",
     "tedious": "^1.14.0",
-	"body-parser":"*"
+	"body-parser":"*",
+	"socket.io":"*"
   }
 }

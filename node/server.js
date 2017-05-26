@@ -1,13 +1,61 @@
-var express = require('express');
+var express    =    require('express');
 var fs = require ('fs');
-var app = express();
-var bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
+var app        =    express();
+
+var server = require('http').createServer (app);
+
+var exports = module.exports = {};
+var Sequelize  =    require('sequelize');
+var mysql 	   = 	require('mysql');
+var orm 	   =  	require('./orm.js');
+var bodyParser = 	require('body-parser');
+	app.use(bodyParser.json());
+	app.use(bodyParser.urlencoded({
+	extended: true
 }));
 
-require('./router/main')(app);
+
+//initialising javascript - http://docs.sequelizejs.com/en/v3/docs/getting-started/
+var sequelize = new Sequelize('mow', 'root', '1234', {
+  host: 'localhost',
+  dialect: 'mysql',
+
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000
+  }
+});
+
+var customer = sequelize.define('customer',orm.Customer);
+var customerDay = sequelize.define('customerDay',orm.CustomerDay);
+var mrCategory = sequelize.define('MRcategory',orm.MealRequirementCategory);
+var mealR = sequelize.define('mealR',orm.MealRequirement);
+
+mrCategory.hasMany(mealR);
+mealR.belongsTo(mrCategory);
+
+var customerMR =  sequelize.define('customerMR',orm.CustomerMealRequirement);
+var driver = sequelize.define('driver',orm.Driver);
+var staff = sequelize.define('staff',orm.Staff);
+
+var tableCreate=true;
+
+customer.sync();
+customerDay.sync();
+mrCategory.sync(); 
+mealR.sync();
+customerMR.sync(); 
+driver.sync();
+staff.sync();
+
+exports.customer = customer;
+exports.mrCategory = mrCategory;
+exports.mealR = mealR;
+
+
+
+
 
 app.use(express.static(__dirname + '/public')); 
 app.set('views',__dirname + '/views');
@@ -17,3 +65,11 @@ app.engine('html', require('ejs').renderFile);
 var server = app.listen(3000,function(){
     console.log("Express is running on port 3000");
 });
+
+
+ var socket = require('socket.io').listen(server);
+ exports.socket = socket;
+ 
+ require('./router/main')(app);
+
+ 
