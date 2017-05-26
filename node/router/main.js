@@ -7,6 +7,8 @@ var customer = db.customer;
 var mealRequirementCategory = db.mealRequirementCategory;
 var mealRequirement = db.mealRequirement;
 var customerDay = db.customerDay;
+var driver = db.driver;
+var user = db.user;
 
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -63,40 +65,48 @@ module.exports = function(app)
 	app.post('/addCustomers', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addCustomers');
+		var c = req.body.customer;
 
-		customer.create( //customer.create({}); for one row at a time, customer.bulkCreate([{},{}]) for multiple rows
-			req.body.customer
-		).then(function(customer){
-			mealRequirement.findAll({
-				where:{
-					id:req.body.mealRequirements
-				}
-			}).then(function(mealRequirements){
-				customer.addMealRequirements(mealRequirements).then(function(){
-					var customerDays = [];
-					var dayKeys = Object.keys(req.body.customerDay);
+		user.create(req.body.user)
+			.then(function(user){
+				c.userID=user.id;
+				customer.create(c)
+					.then(function(customer){
+						mealRequirement.findAll({
+							where:{
+								id:req.body.mealRequirements
+							}
+						})
+							.then(function(mealRequirement){
+								customer.addMealRequirements(mealRequirements)
+									.then(function(){
+										var customerDays = [];
+										var dayKeys = Object.keys(req.body.customerDay);
 
-					dayKeys.forEach(function(day){
-						var obj = req.body.customerDay[day];
-						var mealKeys = Object.keys(obj);
-						mealKeys.forEach(function(key){
-							var c = {'day':day,'key':key,'customerId':customer.id};
-							customerDays.push(c);
-						});
-					});
-					customerDay.bulkCreate(customerDays).then(function(cDays){
-						res.send(JSON.stringify({ customer: customer }));
-					})
-				});
-			})
-		});
+										dayKeys.forEach(function(day){
+											var obj = req.body.customerDay[day];
+											var mealKeys = Object.keys(obj);
+											mealKeys.forEach(function(key){
+												var c = {'day':day,'key':key,'customerId':customer.id};
+												customerDays.push(c);
+											});
+										});
+										customerDay.bulkCreate(customerDays)
+											.then(function(cDays){
+												res.send(JSON.stringify({ customer: customer }));
+											});
+									})
+							});
+					});	
+			});
 	});
+		
 
 	app.get('/addCustomer', function (req, res){
 		console.log ('GET /addCustomer');
 		mealRequirementCategory.findAll({include:[mealRequirement]})
 			.then(function(mrcats){
-				res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:{}});
+				res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:{}, user:{}});
 			});
 	});
 
@@ -153,6 +163,28 @@ module.exports = function(app)
 			});
 		});
 	});
+	
+	app.get('/addDriver', function(req,res){
+		console.log('GET /addDriver')
+		res.render('main.ejs', {page:"addDriver", driver:{}});
+	});
+	
+	app.post('/addDriver', function(req,res){
+		console.log('POST /addDriver')
+		console.log(req.body);
+
+		user.create(
+		
+		)
+		
+		driver.create( 
+			req.body.driver
+		).then(function(drivers){
+			
+		});
+	})
+	
+	
 
 	//API url for mobile app
 	app.get("/getAddresses", function(req,res){
@@ -161,6 +193,29 @@ module.exports = function(app)
 		customer.findAll()
 		.then(function(customers){
 			res.send(JSON.stringify({ customers:customers }));
+		});
+	});
+	
+	
+	app.get('/addDriver', function (req, res){
+		console.log ('GET /addDriver');
+		res.render('main.ejs', {page:"addDriver", driver:{}});
+	});
+	
+	app.post('/addDriver', function (req, res){
+		console.log(req.body);
+		console.log ('POST /addDriver');
+		var d = {};
+		
+		user.create(
+			req.body.user
+		).then(function(user){
+			d.userId = user.id;
+			driver.create( 
+				d
+			).then(function(driver){
+				res.send(JSON.stringify({ driver: driver }));
+			});	
 		});
 	});
 }
