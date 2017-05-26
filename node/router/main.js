@@ -154,20 +154,12 @@ module.exports = function(app) {
 		res.render('main.ejs', {page:"addDriver", driver:{}});
 	});
 	
-	app.post('/addDriver', function(req,res){
-		console.log('POST /addDriver')
-		console.log(req.body);
-
-		user.create(
-		
-		)
-		
-		driver.create( 
-			req.body.driver
-		).then(function(drivers){
-			
+		app.get("/maps", function(req,res){
+		customer.findAll()
+		.then(function(customers){
+			res.render('main.ejs', {page:"maps", customers:customers});
 		});
-	})
+	});
 	
 	
 
