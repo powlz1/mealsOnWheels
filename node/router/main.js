@@ -148,4 +148,12 @@ module.exports = function(app) {
 			res.send(JSON.stringify({ customers:customers }));
 		});
 	});
+	app.get("/getDrivers", function(req,res){
+		//need to add check that this is being accessed by app only
+		//also need to filter this list to provide only the customers for today, + eventually for a particular driver
+		driver.findAll()
+		.then(function(drivers){
+			res.send(JSON.stringify({ drivers:drivers }));
+		});
+	});
 }

@@ -1,10 +1,13 @@
 package info.androidhive.jsonparsing;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -22,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
 
     private ProgressDialog pDialog;
-    private ListView lv;
+
+    Button buttonStart;
+    Button buttonStartMap;
 
     // URL to get contacts JSON
     private static String url = "http://api.androidhive.info/contacts/";
@@ -36,9 +41,32 @@ public class MainActivity extends AppCompatActivity {
 
         contactList = new ArrayList<>();
 
-        lv = (ListView) findViewById(R.id.list);
+
 
         new GetContacts().execute();
+        buttonStart = (Button) findViewById(R.id.button2);
+        buttonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), StartActivity.class);
+                intent.putExtra("array", contactList);
+
+                startActivity(intent);
+            }
+        });
+        buttonStartMap = (Button) findViewById(R.id.button);
+        buttonStartMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intents = new Intent(getApplicationContext(), MapsActivity.class);
+                intents.putExtra("array", contactList);
+                startActivity(intents);
+
+            }
+        });
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+
     }
 
     /**
@@ -97,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         contact.put("name", name);
                         contact.put("email", email);
                         contact.put("mobile", mobile);
+                        contact.put("address", address);
 
                         // adding contact to contact list
                         contactList.add(contact);
@@ -131,23 +160,6 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            // Dismiss the progress dialog
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            /**
-             * Updating parsed JSON data into ListView
-             * */
-            ListAdapter adapter = new SimpleAdapter(
-                    MainActivity.this, contactList,
-                    R.layout.list_item, new String[]{"name", "email",
-                    "mobile"}, new int[]{R.id.name,
-                    R.id.email, R.id.mobile});
-
-            lv.setAdapter(adapter);
-        }
 
     }
 }
