@@ -189,7 +189,7 @@ module.exports = function(app) {
 	app.post('/addDriver', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addDriver');
-		var d = {};
+		var d = req.body.driver;
 		
 		user.create(
 			req.body.user
@@ -200,6 +200,8 @@ module.exports = function(app) {
 			).then(function(driver){
 				res.send(JSON.stringify({ driver: driver }));
 			});	
+		});
+	});
 			
 	app.get("/getDrivers", function(req,res){
 		//need to add check that this is being accessed by app only
