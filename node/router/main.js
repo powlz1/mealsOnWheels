@@ -11,34 +11,20 @@ var customerDay = db.customerDay;
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-module.exports = function(app)
-{
-	app.get('/', function (req, res){
-		console.log ('GET /');
+module.exports = function(app) {
+	// Multiple routes
+	app.get(['/', '/index'], function (req, res) {
+		console.log ('GET /index');
+
 		var today = days[new Date().getDay()];
 
 		customerDay.findAll({
-			where:{
+			where: {
 				day:today
 			},
 			attributes: ['key',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
 			group: ["key"]
-		}).then(function(customerDays){
-			console.log(customerDays);
-			res.render('main.ejs', {page:"index", today:today, customerDays:customerDays});
-		});
-	});	
-	
-	app.get('/index', function (req, res){
-		console.log ('GET /index');
-		var today = days[new Date().getDay()];
-		customerDay.findAll({
-			where:{
-				day:today
-			},
-			attributes: ['key',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
-			group: ["key"]
-		}).then(function(customerDays){
+		}).then(function(customerDays) {
 			console.log(customerDays);
 			
 			customerDay.findAll({
@@ -47,7 +33,6 @@ module.exports = function(app)
 			}).then(function(allCustomerDays){
 				res.render('main.ejs', {page:"index", today:today, customerDays:customerDays,allCustomerDays:allCustomerDays});
 			});
-			
 		});
 	});
 	
