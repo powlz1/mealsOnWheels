@@ -11,7 +11,7 @@ var customerDay = db.customerDay;
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-module.exports = function(app)
+module.exports = function(app, socket)
 {
 	app.get('/', function (req, res){
 		console.log ('GET /');
@@ -52,7 +52,7 @@ module.exports = function(app)
 	});
 	
 	app.get('/viewCustomers', function (req, res){
-		console.log ('GET /viewCustomers');
+		console.log ('GET /viewCustomers');		
 		
 		customer.findAll({include:[mealRequirement]})
 		.then(function(customers){
@@ -85,6 +85,13 @@ module.exports = function(app)
 						});
 					});
 					customerDay.bulkCreate(customerDays).then(function(cDays){
+						
+						app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
+							//console.log(err)
+						//	console.log(html)
+						socket.emit('zak', html);
+							});
+									
 						res.send(JSON.stringify({ customer: customer }));
 					})
 				});
@@ -99,6 +106,7 @@ module.exports = function(app)
 				res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:{}});
 			});
 	});
+
 
 	app.get('/editCustomer/:customerID', function (req, res){
 		console.log ('GET /addCustomers');
