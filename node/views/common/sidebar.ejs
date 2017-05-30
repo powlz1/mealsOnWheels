@@ -1,8 +1,8 @@
-<%  current_user = {isAdmin:"False"}; %> 
+<%  current_user = {isAdmin:"True"}; %>
 
 
-<% if (current_user.isAdmin == "true") { %>
+<% if (current_user.isAdmin == "True") { %>
 	<% include ../partials/adminNavbar.ejs %>
 <% } else { %>
-	<% include ../partials/adminNavbar.ejs %>
+	<% include ../partials/userNavbar.ejs %>
 <% } %>

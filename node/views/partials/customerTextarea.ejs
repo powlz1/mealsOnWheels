@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="form-group">
             <label for="<%= field.fieldId %>"><%= field.fieldName %></label>
-            <textarea class="form-control" id="<%= field.fieldId %>"><% if(locals.customers && locals.customers[0]){%><%- customers[0][field.fieldId] %><% } %></textarea>
+            <textarea class="form-control" id="<%= field.fieldId %>" ng-model="saveCustomer['<%= field.fieldId %>']"><%- customer[field.fieldId] %></textarea>
         </div>
     </div>
 </div>
