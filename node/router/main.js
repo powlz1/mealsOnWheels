@@ -93,6 +93,7 @@ module.exports = function(app, socket)
 			})
 		});
 	});
+});
 		
 
 	app.get('/addCustomer', function (req, res){
