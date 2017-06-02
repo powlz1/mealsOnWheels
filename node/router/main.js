@@ -168,7 +168,7 @@ module.exports = function(app, socket)
 	});
 	
 	app.get("/maps", function(req,res){
-	customer.findAll()
+	customer.findAll({include:[user]})
 	.then(function(customers){
 		res.render('main.ejs', {page:"maps", customers:customers});
 		});
