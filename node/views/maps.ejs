@@ -52,7 +52,7 @@
 	<% customers.forEach(function(customer){ %>
 		console.log("<%= customer.address %>");
 		
-		<% if (customer.latitude == "") { %>
+		<% if (customer.latitude) { %>
 			<% existingCustomer.push(customer); %>
 		<% }else{ %>
 			<% tempCustomer.push(customer); %>
