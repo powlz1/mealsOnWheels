@@ -26,18 +26,55 @@
 	};
 	
 	var calendarEvents = [];
+	
+	var calendar = {
+			// put your options and callbacks here
+			events: calendarEvents,
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'listDay,listWeek,month'
+			},
+			views: {
+				listDay: { buttonText: 'list day' },
+				listWeek: { buttonText: 'list week' }
+			},
+			defaultView: 'listDay',
+			eventLimit: true,
+			eventRender: function(event, element) { 
+				element.find('.fc-list-item-time').replaceWith("<td class ='fc-list-item-time fc-widget-content'>" + event.title + "</td>");
+				element.find('.fc-list-item-title').replaceWith("<td class ='fc-list-item-title fc-widget-content'>Quantity: " + event.numberOfMeals + "</td>"); 
+			} 
+		};
 
 	$(document).ready(function() 
 	{ 
 		// page is now ready, initialize the calendar...
-		$('#calendar').fullCalendar({
-			// put your options and callbacks here
-			events: calendarEvents
-					
-					
-		})
+		$('#calendar').fullCalendar(calendar);
 	});
 </script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+<script>	
+var socket = io.connect("localhost:3000");
+	<!-- get the customer from main within router and log it into the page -->
+	socket.on('get_Customer_Days', function(customer)
+	{	
+		var data = [];
+		
+		for(var c in customer) {
+			data.push({
+				title: customer[c].key,
+				dow: [days[customer[c].day]],
+				color: colors[customer[c].key],
+				numberOfMeals: customer[c].count
+			});
+		}
+		
+		$("#calendar").fullCalendar('removeEvents'); 
+		$("#calendar").fullCalendar('addEventSource', data);
+	});
+	</script>
 
 
 <div class="row">
@@ -48,27 +85,20 @@
 		<p>
 			Today is <span><%= today %></span>
 		</p>
-		<p>
-			Today's meals:<br/>
-			<% customerDays.forEach(function(e){%>
-				<%= e.dataValues['key'] %> <%= e.dataValues["count"] %><br/>
-			<% }); %>
-		</p>
 		
 			<% allCustomerDays.forEach(function(e){%>
 				<script type="text/javascript">
 
 				var calendarEvent = {};
-				calendarEvent.title = "<%=e.dataValues['key']%>" + " " + "<%=e.dataValues['count']%>";
+				calendarEvent.title = "<%=e.dataValues['key']%>";
 				calendarEvent.dow = [days["<%=e.dataValues['day']%>"]];
 				calendarEvent.color =  colors["<%=e.dataValues['key']%>"];
+				calendarEvent.numberOfMeals = "<%=e.dataValues['count']%>";
 				
 				calendarEvents.push(calendarEvent);
 
 				</script>
 			<% }); %>
-		
-		
 		
 		<div id='calendar'></div>
 		

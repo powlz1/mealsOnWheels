@@ -64,11 +64,11 @@ module.exports = function(app, socket)
 								id:req.body.mealRequirements
 							}
 						})
-					.then(function(mealRequirements){
-						customer.addMealRequirements(mealRequirements)
-							.then(function(){
-								var customerDays = [];
-								var dayKeys = Object.keys(req.body.customerDay);
+							.then(function(mealRequirements){
+								customer.addMealRequirements(mealRequirements)
+									.then(function(){
+										var customerDays = [];
+										var dayKeys = Object.keys(req.body.customerDay);
 
 					dayKeys.forEach(function(day){
 						var obj = req.body.customerDay[day];
@@ -80,10 +80,16 @@ module.exports = function(app, socket)
 					});
 					customerDay.bulkCreate(customerDays).then(function(cDays){
 						
-						app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
+				//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
+						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
 							//console.log(err)
-						//	console.log(html)
-						socket.emit('zak', html);
+							//	console.log(html)
+							customerDay.findAll({
+								attributes: ['key','day',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+								group: ["key", "day"]
+							}).then(function(allCustomerDays){
+				
+						socket.emit('get_Customer_Days', allCustomerDays);
 							});
 									
 						res.send(JSON.stringify({ customer: customer }));
@@ -165,7 +171,7 @@ module.exports = function(app, socket)
 	});
 	
 	app.get("/maps", function(req,res){
-	customer.findAll()
+	customer.findAll({include:[user]})
 	.then(function(customers){
 		res.render('main.ejs', {page:"maps", customers:customers});
 		});
