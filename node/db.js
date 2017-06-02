@@ -39,6 +39,8 @@ db.customer.hasMany(db.customerDay);
 
 db.user.hasOne(db.customer);
 db.user.hasOne(db.driver);
+db.customer.belongsTo(db.user);
+db.driver.belongsTo(db.user);
 
 //create if not exists
 db.sequelize.sync();
