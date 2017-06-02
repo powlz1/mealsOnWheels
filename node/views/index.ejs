@@ -26,11 +26,8 @@
 	};
 	
 	var calendarEvents = [];
-
-	$(document).ready(function() 
-	{ 
-		// page is now ready, initialize the calendar...
-		$('#calendar').fullCalendar({
+	
+	var calendar = {
 			// put your options and callbacks here
 			events: calendarEvents,
 			header: {
@@ -48,7 +45,12 @@
 				element.find('.fc-list-item-time').replaceWith("<td class ='fc-list-item-time fc-widget-content'>" + event.title + "</td>");
 				element.find('.fc-list-item-title').replaceWith("<td class ='fc-list-item-title fc-widget-content'>Quantity: " + event.numberOfMeals + "</td>"); 
 			} 
-		})
+		};
+
+	$(document).ready(function() 
+	{ 
+		// page is now ready, initialize the calendar...
+		$('#calendar').fullCalendar(calendar);
 	});
 </script>
 
@@ -57,8 +59,20 @@
 var socket = io.connect("localhost:3000");
 	<!-- get the customer from main within router and log it into the page -->
 	socket.on('get_Customer_Days', function(customer)
-	{
-		console.log(customer);
+	{	
+		var data = [];
+		
+		for(var c in customer) {
+			data.push({
+				title: customer[c].key,
+				dow: [days[customer[c].day]],
+				color: colors[customer[c].key],
+				numberOfMeals: customer[c].count
+			});
+		}
+		
+		$("#calendar").fullCalendar('removeEvents'); 
+		$("#calendar").fullCalendar('addEventSource', data);
 	});
 	</script>
 
