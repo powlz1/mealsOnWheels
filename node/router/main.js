@@ -42,9 +42,9 @@ module.exports = function(app, socket)
 	
 	app.get('/viewCustomers', function (req, res){
 		console.log ('GET /viewCustomers');		
-		
-		customer.findAll({include:[mealRequirement]})
+		customer.findAll({include:[mealRequirement,user]})
 		.then(function(customers){
+			console.log();
 			res.render('main.ejs', {page:"viewCustomers", customers:customers});
  		});
 	});
@@ -53,23 +53,25 @@ module.exports = function(app, socket)
 		console.log(req.body);
 		console.log ('POST /addCustomers');
 		var c = req.body.customer;
+		var uID = user.id;		
 
-		user.create(req.body.user)
-			.then(function(user){
-				c.userID=user.id;
+		user.create(req.body.user).then(function(user){
+			c.userId = user.id;
 				customer.create(c)
 					.then(function(customer){
+			
+				
+			
 						mealRequirement.findAll({
 							where:{
 								id:req.body.mealRequirements
 							}
 						})
-							.then(function(mealRequirement){
-								customer.addMealRequirements(mealRequirements)
-									.then(function(){
-										var customerDays = [];
-										var dayKeys = Object.keys(req.body.customerDay);
-
+					.then(function(mealRequirements){
+						customer.addMealRequirements(mealRequirements)
+							.then(function(){
+								var customerDays = [];
+								var dayKeys = Object.keys(req.body.customerDay);
 
 					dayKeys.forEach(function(day){
 						var obj = req.body.customerDay[day];
@@ -93,6 +95,7 @@ module.exports = function(app, socket)
 			})
 		});
 	});
+	//customer.update({userId:uID},{where:{}});
 });
 		
 
@@ -164,10 +167,10 @@ module.exports = function(app, socket)
 		res.render('main.ejs', {page:"addDriver", driver:{}});
 	});
 	
-		app.get("/maps", function(req,res){
-		customer.findAll()
-		.then(function(customers){
-			res.render('main.ejs', {page:"maps", customers:customers});
+	app.get("/maps", function(req,res){
+	customer.findAll()
+	.then(function(customers){
+		res.render('main.ejs', {page:"maps", customers:customers});
 		});
 	});
 	
@@ -193,13 +196,9 @@ module.exports = function(app, socket)
 		console.log ('POST /addDriver');
 		var d = req.body.driver;
 		
-		user.create(
-			req.body.user
-		).then(function(user){
+		user.create(req.body.user).then(function(user){
 			d.userId = user.id;
-			driver.create( 
-				d
-			).then(function(driver){
+			driver.create(d).then(function(driver){
 				res.send(JSON.stringify({ driver: driver }));
 			});	
 		});

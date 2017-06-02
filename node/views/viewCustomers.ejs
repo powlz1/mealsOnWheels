@@ -8,10 +8,10 @@
 		
 var socket = io.connect("localhost:3000");
 	<!-- get the customer from main within router and dispaly it on this page -->
-	socket.on('zak', function(customer)
+	socket.on('zak', function(customer,user)
 	{
 		console.log(customer);
-		$("#CustomerTable").append(customer);
+		$("#CustomerTable").append(customer,user);
 	});
 	</script>
 	
