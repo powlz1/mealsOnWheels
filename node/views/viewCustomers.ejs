@@ -9,9 +9,10 @@
 var socket = io.connect("localhost:3000");
 	<!-- get the customer from main within router and log it into the page -->
 	socket.on('get_Customer', function(customer)
+
 	{
 		console.log(customer);
-		$("#CustomerTable").append(customer);
+		$("#CustomerTable").append(customer,user);
 	});
 	</script>
 	
