@@ -59,9 +59,6 @@ module.exports = function(app, socket)
 			c.userId = user.id;
 				customer.create(c)
 					.then(function(customer){
-			
-				
-			
 						mealRequirement.findAll({
 							where:{
 								id:req.body.mealRequirements
@@ -212,4 +209,43 @@ module.exports = function(app, socket)
 			res.send(JSON.stringify({ drivers:drivers }));
 		});
 	});
-}
+	
+	app.get("/customerDriver", function(req,res){
+		console.log ('GET /customerDriver');
+		customer.findAll({include:[user]})
+		.then(function(customers){
+			driver.findAll({include:[user]})
+				.then(function(drivers){
+					res.render('main.ejs', {page:"dropdownList",customers:customers,drivers:drivers });
+				})
+		})
+	 });
+	 
+	 app.post('/customerDriver', function (req, res){
+		console.log(req.body);
+		console.log ('POST /customerDriver');
+		var d = req.body.driver;
+		var c = req.body.customer;
+		
+		driver.findAll({
+			where:{
+				id:d
+			}
+		})
+		.then(function(drive){
+			customer.findAll({
+				where:{
+					id:c
+				}
+			})
+			.then(function(cust){
+				drive.addCustomers(cust)
+				.then(function(driver){
+					res.send(JSON.stringify({ driver: driver }));
+				});
+			})
+		})
+	 });		
+		
+	
+}//closes route function
