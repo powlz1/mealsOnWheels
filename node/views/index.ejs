@@ -32,9 +32,22 @@
 		// page is now ready, initialize the calendar...
 		$('#calendar').fullCalendar({
 			// put your options and callbacks here
-			events: calendarEvents
-					
-					
+			events: calendarEvents,
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'listDay,listWeek,month'
+			},
+			views: {
+				listDay: { buttonText: 'list day' },
+				listWeek: { buttonText: 'list week' }
+			},
+			defaultView: 'listDay',
+			eventLimit: true,
+			eventRender: function(event, element) { 
+				element.find('.fc-list-item-time').replaceWith("<td class ='fc-list-item-time fc-widget-content'>" + event.title + "</td>");
+				element.find('.fc-list-item-title').replaceWith("<td class ='fc-list-item-title fc-widget-content'>Quantity: " + event.numberOfMeals + "</td>"); 
+			} 
 		})
 	});
 </script>
@@ -58,27 +71,20 @@ var socket = io.connect("localhost:3000");
 		<p>
 			Today is <span><%= today %></span>
 		</p>
-		<p>
-			Today's meals:<br/>
-			<% customerDays.forEach(function(e){%>
-				<%= e.dataValues['key'] %> <%= e.dataValues["count"] %><br/>
-			<% }); %>
-		</p>
 		
 			<% allCustomerDays.forEach(function(e){%>
 				<script type="text/javascript">
 
 				var calendarEvent = {};
-				calendarEvent.title = "<%=e.dataValues['key']%>" + " " + "<%=e.dataValues['count']%>";
+				calendarEvent.title = "<%=e.dataValues['key']%>";
 				calendarEvent.dow = [days["<%=e.dataValues['day']%>"]];
 				calendarEvent.color =  colors["<%=e.dataValues['key']%>"];
+				calendarEvent.numberOfMeals = "<%=e.dataValues['count']%>";
 				
 				calendarEvents.push(calendarEvent);
 
 				</script>
 			<% }); %>
-		
-		
 		
 		<div id='calendar'></div>
 		
