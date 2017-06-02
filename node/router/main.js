@@ -19,7 +19,7 @@ var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturda
 module.exports = function(app, passport, socket)
 {
 
-	app.get(['/', '/index'], isLoggedIn, function (req, res) {
+	app.get(['/', '/index'], function (req, res) {
 		console.log ('GET /index');
 
 		var today = days[new Date().getDay()];
@@ -223,7 +223,7 @@ module.exports = function(app, passport, socket)
 	// HOME PAGE (with login links) ========
 	// =====================================
 	app.get('/home', function(req, res) {
-		res.render('home.ejs'); // load the index.ejs file
+		res.render('index.ejs'); // load the index.ejs file
 	});
 
 	//=====================================
@@ -299,5 +299,5 @@ function isLoggedIn(req, res, next) {
 		return next();
 
 	// if they aren't redirect them to the home page
-	res.redirect('/home');
+	res.redirect('/login');
 }
