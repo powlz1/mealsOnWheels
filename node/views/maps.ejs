@@ -1,9 +1,5 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd3lL6VULqPXaorKesbnBc_s7-jpS9hsQ&callback=initMap"
     async defer></script>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 	<script>
 	function initMap() {
 	  
@@ -13,22 +9,13 @@
         });
       }
 	  </script>
-<<<<<<< HEAD
-=======
-	
->>>>>>> origin/production
-=======
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 <style>
   #map {
     height: 600px;
 	border: 2px solid black;
   }
-
 </style>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 <div class="row">
 <div class="col-md-9">
 
@@ -55,39 +42,6 @@
 	</div>
     <script>
 	console.log("here?????");
-=======
-=======
-<div class="row">
-<div class="col-md-9">
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
-
-    <div id="map"></div>
-	</div>
-	
-	<div class="col-md-3">
-	<table>
-	<tr>
-	<th>First Name:</th>
-	<th>Last Name:</th>
-	<th>Address:</th>
-	</tr>
-	
-<<<<<<< HEAD
->>>>>>> origin/production
-=======
-	<% customers.forEach(function(customer){ %>
-	<tr>
-		<td><%= customer.user.firstName %></td>
-		<td><%= customer.user.lastName %></td>
-		<td><%= customer.address %></td>
-	</tr>
-	<% }); %> 
-	</table>
-	</div>
-	</div>
-    <script>
-	console.log("here?????");
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 	var address1 = "62 orari st dunedin nz";
 	//var address2 = "31 maitland st dunedin nz";
 	
@@ -97,32 +51,15 @@
 	<% customers.forEach(function(customer){ %>
 		console.log("<%= customer.address %>");
 		
-<<<<<<< HEAD
-<<<<<<< HEAD
 		<% if (customer.latitude) { %>
 			<% existingCustomer.push(customer); %>
 		<% }else{ %>
 			<% tempCustomer.push(customer); %>
 			console.log("temppush");
-=======
-		<% if (customer.lat) { %>
-			<% existingCustomer.push(customer); %>
-		<% }else{ %>
-			<% tempCustomer.push(customer); %>
->>>>>>> origin/production
-=======
-		<% if (customer.latitude) { %>
-			<% existingCustomer.push(customer); %>
-		<% }else{ %>
-			<% tempCustomer.push(customer); %>
-			console.log("temppush");
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 		<% } %>
 	
 	<% }); %>
 	
-<<<<<<< HEAD
-<<<<<<< HEAD
 	<% console.log(existingCustomer); %>
 	<% console.log(tempCustomer); %>
 	
@@ -131,23 +68,6 @@
 		var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&location=' + addy + '&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
 		$.get(JSONSTRING, function(data) {
 			console.log("data",data);
-=======
-	<% tempCustomer.forEach(function(tcustomer){ %>
-=======
-	<% console.log(existingCustomer); %>
-	<% console.log(tempCustomer); %>
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
-	
-	<% tempCustomer.forEach(function(tcustomer){ %>
-		var addy="<%= tcustomer.address; %>";
-		var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&location=' + addy + '&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
-		$.get(JSONSTRING, function(data) {
-<<<<<<< HEAD
-			console.log(data);
->>>>>>> origin/production
-=======
-			console.log("data",data);
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 			for (i = 0; i < data.results.length; i++) { 
 			var pos = data.results[i].locations[0].latLng;
 			console.log(pos);
@@ -160,7 +80,6 @@
 	<% }); %>
 	
 	//var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&json={"locations":[{"street":"' + "" + '"},"options":{"thumbMaps":false,"maxResults":"1"}}&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
-
 	//	var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&json={"locations":[{"street":"' + address1 + '"}],"options":{"thumbMaps":false,"maxResults":"1"}}&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
 		
 		//var addresses = ["37 Maitland Street, Dunedin", "30 Roy Crescent, Dunedin", "114 Harbour Tce, Dunedin"];
@@ -180,29 +99,7 @@
 			}
 		});
 		*/
-<<<<<<< HEAD
-<<<<<<< HEAD
 		
       var map;
       
-=======
-      var map;
-      function initMap() {
-	  
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -45.8788, lng: 170.5028},
-          zoom: 8
-        });
-		
-	
-      }
->>>>>>> origin/production
-=======
-		
-      var map;
-      
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
-
     </script>
-
-    

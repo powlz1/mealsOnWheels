@@ -26,21 +26,8 @@
 	};
 	
 	var calendarEvents = [];
-<<<<<<< HEAD
-<<<<<<< HEAD
 	
 	var calendar = {
-=======
-
-	$(document).ready(function() 
-	{ 
-		// page is now ready, initialize the calendar...
-		$('#calendar').fullCalendar({
->>>>>>> origin/production
-=======
-	
-	var calendar = {
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 			// put your options and callbacks here
 			events: calendarEvents,
 			header: {
@@ -58,49 +45,11 @@
 				element.find('.fc-list-item-time').replaceWith("<td class ='fc-list-item-time fc-widget-content'>" + event.title + "</td>");
 				element.find('.fc-list-item-title').replaceWith("<td class ='fc-list-item-title fc-widget-content'>Quantity: " + event.numberOfMeals + "</td>"); 
 			} 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 		};
-
 	$(document).ready(function() 
 	{ 
 		// page is now ready, initialize the calendar...
 		$('#calendar').fullCalendar(calendar);
-<<<<<<< HEAD
-	});
-</script>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
-<script>	
-var socket = io.connect("localhost:3000");
-	<!-- get the customer from main within router and log it into the page -->
-	socket.on('get_Customer_Days', function(customer)
-	{	
-		var data = [];
-		
-		for(var c in customer) {
-			data.push({
-				title: customer[c].key,
-				dow: [days[customer[c].day]],
-				color: colors[customer[c].key],
-				numberOfMeals: customer[c].count
-			});
-		}
-		
-		$("#calendar").fullCalendar('removeEvents'); 
-		$("#calendar").fullCalendar('addEventSource', data);
-	});
-	</script>
-
-=======
-		})
-	});
-</script>
-
->>>>>>> origin/production
-=======
 	});
 </script>
 
@@ -125,7 +74,6 @@ var socket = io.connect("localhost:3000");
 	});
 	</script>
 
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 
 <div class="row">
 
@@ -138,7 +86,6 @@ var socket = io.connect("localhost:3000");
 		
 			<% allCustomerDays.forEach(function(e){%>
 				<script type="text/javascript">
-
 				var calendarEvent = {};
 				calendarEvent.title = "<%=e.dataValues['key']%>";
 				calendarEvent.dow = [days["<%=e.dataValues['day']%>"]];
@@ -146,7 +93,6 @@ var socket = io.connect("localhost:3000");
 				calendarEvent.numberOfMeals = "<%=e.dataValues['count']%>";
 				
 				calendarEvents.push(calendarEvent);
-
 				</script>
 			<% }); %>
 		
