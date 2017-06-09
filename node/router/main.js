@@ -157,6 +157,7 @@ module.exports = function(app, socket)
 
 					// Inserts multiple customerDays into the customerDay table
 					customerDay.bulkCreate(customerDays).then(function(cDays) {
+<<<<<<< HEAD
 						
 <<<<<<< HEAD
 				//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
@@ -169,6 +170,10 @@ module.exports = function(app, socket)
 							}).then(function(allCustomerDays){
 								socket.emit('get_Customer_Days', allCustomerDays);
 =======
+=======
+				
+				//method to pass the new customer int othe view customer page so that it can be displayed within the table 
+>>>>>>> 593f14f03c18150fb3fe55fe9421ddccad15bf82
 						// Commented code is old code. Use at own risk
 						//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
 						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
@@ -191,6 +196,7 @@ module.exports = function(app, socket)
 						
 						// Send a JSON response and stringify all the info
 						res.send(JSON.stringify({ customer: customer }));
+
 					}); // end customerDay.bulkCreate.then
 				}); // End customer.addMealRequirements.then
 			}); // end mealRequirement.findAll.then
@@ -221,9 +227,9 @@ module.exports = function(app, socket)
 					where:{
 						id:customerID
 					},
-					include:[mealRequirement]
+					include:[mealRequirement, user]
 				}).then(function(customers){
-					res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:customers[0]});
+					res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:customers[0], user:customers[0].user});
 				});
 			});
 	});
@@ -346,7 +352,7 @@ module.exports = function(app, socket)
 				}
 			})
 			.then(function(cust){
-				drive.addCustomers(cust)
+				drive[0].addCustomers(cust)
 				.then(function(driver){
 					res.send(JSON.stringify({ driver: driver }));
 				});

@@ -9,7 +9,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="customerStatus">Customer status</label>
-                                    <select class="form-control" id="customerStatus">
+                                    <select class="form-control" id="customerStatus"  ng-model="saveCustomer['customerStatus']">
                                         <option value="active">Active</option>
                                         <option value="notActive">Not active</option>
                                     </select>
@@ -32,7 +32,7 @@
                         <% field = {fieldId:"address",fieldName: "Address"}; %>
                         <% include partials/customerTextarea.ejs %>
 						
-                        <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phoneNumber",fieldName: "Phone number"}]; %>
+                        <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phone",fieldName: "Phone number"}]; %>
                         <% include partials/customerInputAddUser.ejs %>
 
                         <% field = {fieldId:"adminNotes",fieldName: "Admin notes"} ;%>
@@ -106,11 +106,12 @@
 <script type="text/javascript">
 
     angular.module('AddCustomer', []).controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
-        $scope.saveCustomer = {};
         $scope.mealRequirements = {};
         $scope.customerRequirements = [];
         $scope.customerDay = {};
-		$scope.saveUser ={};
+		$scope.saveUser = {"firstName":"<%= user.firstName %>", "lastName":"<%= user.lastName %>", "email":"<%= user.email %>","phone":"<%= user.phone %>", "password":"<%= user.password %>",  "username":"<%= user.username %>"};
+
+		$scope.saveCustomer = {"customerNumber":"<%= customer.customerNumber %>", "customerStatus":"<%= customer.customerStatus %>", "adminNotes":"<%= customer.adminNotes %>", "address":"<%= customer.address %>" };
 
         $scope.findRequirement = function(customer, mealr){
             var found = false;
@@ -138,9 +139,10 @@
                 "mealRequirements":$scope.customerRequirements,
                 "customerDay" : $scope.customerDay,
 				"user":$scope.saveUser
-			},
-            function (response) { $scope.results = response; },
-            function (failure) { console.log("failed : ", failure ); });
+			}).success(function(){
+				window.alert("customer saved");
+			});
+			
         }
     }]);
 

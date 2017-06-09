@@ -15,9 +15,12 @@
 				<%})%>
 		</select>
 	</div>
+
  <div style="position:fixed;top:0;right:0;padding:10px;">
         <input type="button" value="Save" class="btn btn-primary" ng-click="addDriverCustomer()"/>
     </div>
+	<br><br>
+	<p id="feedback"> </p>
 </div>
 
 
@@ -36,9 +39,9 @@
            $http.post('/customerDriver', {
 				"customer": $scope.customer,
                 "driver": $scope.driver
-			},
-            function (response) { alert("saved"); },
-            function (failure) { console.log("failed : ", failure ); });
+			}).success(function(){
+				window.alert("customer linked to driver");
+			});
         }
     }]);
 
