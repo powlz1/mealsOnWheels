@@ -312,7 +312,7 @@ module.exports = function(app, socket)
 
 	// process the signup form
 	app.post('/signup', passport.authenticate('local-signup', {
-		//successRedirect : '/profile', // redirect to the secure profile section
+		successRedirect : '/index', // redirect to the secure profile section
 		failureRedirect : '/signup', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
 	}));
@@ -322,11 +322,11 @@ module.exports = function(app, socket)
 	// =====================================
 	// we will want this protected so you have to be logged in to visit
 	// we will use route middleware to verify
-	app.get('/profile', ensureLogin.ensureLoggedIn(), function(req, res) {
-		res.render('profile.ejs', {
-			user : req.user // get the user out of session and pass to template
-		});
-	});
+	//app.get('/profile', ensureLogin.ensureLoggedIn(), function(req, res) {
+	//	res.render('profile.ejs', {
+	//		user : req.user // get the user out of session and pass to template
+	//	});
+	//});
 
 	// =====================================
 	// LOGOUT ==============================
