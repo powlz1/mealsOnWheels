@@ -18,7 +18,7 @@ var passport = require('passport');
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 
-module.exports = function(app, passport, socket)
+module.exports = function(app, socket)
 {
 
 	app.get(['/', '/index'], function (req, res) {
@@ -46,9 +46,9 @@ module.exports = function(app, passport, socket)
 	
 	app.get('/viewCustomers', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /viewCustomers');		
-		
-		customer.findAll({include:[mealRequirement]})
+		customer.findAll({include:[mealRequirement,user]})
 		.then(function(customers){
+			console.log();
 			res.render('main.ejs', {page:"viewCustomers", customers:customers});
  		});
 	});
@@ -57,10 +57,10 @@ module.exports = function(app, passport, socket)
 		console.log(req.body);
 		console.log ('POST /addCustomers');
 		var c = req.body.customer;
+		var uID = user.id;		
 
-		user.create(req.body.user)
-			.then(function(user){
-				c.userID=user.id;
+		user.create(req.body.user).then(function(user){
+			c.userId = user.id;
 				customer.create(c)
 					.then(function(customer){
 						mealRequirement.findAll({
@@ -68,12 +68,11 @@ module.exports = function(app, passport, socket)
 								id:req.body.mealRequirements
 							}
 						})
-							.then(function(mealRequirement){
+							.then(function(mealRequirements){
 								customer.addMealRequirements(mealRequirements)
 									.then(function(){
 										var customerDays = [];
 										var dayKeys = Object.keys(req.body.customerDay);
-
 
 					dayKeys.forEach(function(day){
 						var obj = req.body.customerDay[day];
@@ -85,10 +84,16 @@ module.exports = function(app, passport, socket)
 					});
 					customerDay.bulkCreate(customerDays).then(function(cDays){
 						
-						app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
+				//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
+						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
 							//console.log(err)
-						//	console.log(html)
-						socket.emit('zak', html);
+							//	console.log(html)
+							customerDay.findAll({
+								attributes: ['key','day',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+								group: ["key", "day"]
+							}).then(function(allCustomerDays){
+				
+						socket.emit('get_Customer_Days', allCustomerDays);
 							});
 									
 						res.send(JSON.stringify({ customer: customer }));
@@ -97,6 +102,7 @@ module.exports = function(app, passport, socket)
 			})
 		});
 	});
+	//customer.update({userId:uID},{where:{}});
 });
 		
 
@@ -109,7 +115,7 @@ module.exports = function(app, passport, socket)
 	});
 
 
-	app.get('/editCustomer/:customerID', ensureLogin.ensureLoggedIn(), function (req, res){
+	app.get('/editCustomer/:customerID', function (req, res){
 		console.log ('GET /addCustomers');
 		var customerID = req.params.customerID;
 		mealRequirementCategory.findAll({include:[mealRequirement]})
@@ -163,15 +169,15 @@ module.exports = function(app, passport, socket)
 		});
 	});
 	
-	app.get('/addDriver', ensureLogin.ensureLoggedIn(), function(req,res){
+	app.get('/addDriver', function(req,res){
 		console.log('GET /addDriver')
 		res.render('main.ejs', {page:"addDriver", driver:{}});
 	});
 	
-		app.get("/maps", ensureLogin.ensureLoggedIn(), function(req,res){
-		customer.findAll()
-		.then(function(customers){
-			res.render('main.ejs', {page:"maps", customers:customers});
+	app.get("/maps", function(req,res){
+	customer.findAll({include:[user]})
+	.then(function(customers){
+		res.render('main.ejs', {page:"maps", customers:customers});
 		});
 	});
 	
@@ -188,7 +194,7 @@ module.exports = function(app, passport, socket)
 	});
 	
 	// is this a duplicate? ******************
-	app.get('/addDriver', ensureLogin.ensureLoggedIn(), function (req, res){
+	app.get('/addDriver', function (req, res){
 		console.log ('GET /addDriver');
 		res.render('main.ejs', {page:"addDriver", driver:{}});
 	});
@@ -198,13 +204,9 @@ module.exports = function(app, passport, socket)
 		console.log ('POST /addDriver');
 		var d = req.body.driver;
 		
-		user.create(
-			req.body.user
-		).then(function(user){
+		user.create(req.body.user).then(function(user){
 			d.userId = user.id;
-			driver.create( 
-				d
-			).then(function(driver){
+			driver.create(d).then(function(driver){
 				res.send(JSON.stringify({ driver: driver }));
 			});	
 		});
@@ -218,9 +220,46 @@ module.exports = function(app, passport, socket)
 			res.send(JSON.stringify({ drivers:drivers }));
 		});
 	});
-
-
-//Passport routes=================================================================
+	
+	app.get("/customerDriver", function(req,res){
+		console.log ('GET /customerDriver');
+		customer.findAll({include:[user]})
+		.then(function(customers){
+			driver.findAll({include:[user]})
+				.then(function(drivers){
+					res.render('main.ejs', {page:"dropdownList",customers:customers,drivers:drivers });
+				})
+		})
+	 });
+	 
+	 app.post('/customerDriver', function (req, res){
+		console.log(req.body);
+		console.log ('POST /customerDriver');
+		var d = req.body.driver;
+		var c = req.body.customer;
+		
+		driver.findAll({
+			where:{
+				id:d
+			}
+		})
+		.then(function(drive){
+			customer.findAll({
+				where:{
+					id:c
+				}
+			})
+			.then(function(cust){
+				drive.addCustomers(cust)
+				.then(function(driver){
+					res.send(JSON.stringify({ driver: driver }));
+				});
+			})
+		})
+	 });		
+		
+	
+	//Passport routes=================================================================
 	// =====================================
 	// HOME PAGE (with login links) ========
 	// =====================================
@@ -296,5 +335,5 @@ module.exports = function(app, passport, socket)
 		req.logout();
 		res.redirect('/');
 	});
-};
-
+	
+}//closes route function

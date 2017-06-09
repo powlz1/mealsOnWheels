@@ -37,8 +37,14 @@ db.customer.belongsToMany(db.mealRequirement, {through: "customerMealRequirement
 db.customerDay.belongsTo(db.customer);
 db.customer.hasMany(db.customerDay);
 
-db.user.hasOne(db.customer);
+db.user.hasOne(db.customer); 
 db.user.hasOne(db.driver);
+db.customer.belongsTo(db.user);
+db.driver.belongsTo(db.user);
+
+
+db.driver.belongsToMany(db.customer, {through: "customerDriver"});
+db.customer.belongsToMany(db.driver, {through: "customerDriver"});
 
 //create if not exists
 db.sequelize.sync();

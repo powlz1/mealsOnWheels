@@ -41,9 +41,7 @@ app.use(express.static(__dirname + '/public'));
 app.set('views',__dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
-	
-// routes ======================================================================
-require('./router/main')(app, passport, socket);
+
 
 // launch server ===============================================================
 var server = app.listen(3000,function(){
@@ -52,4 +50,7 @@ var server = app.listen(3000,function(){
 
 // socket ======================================================================
 var socket = require('./socket.js')(server);
+
+// routes ======================================================================
+require('./router/main')(app, socket);
 
