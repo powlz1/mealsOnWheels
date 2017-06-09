@@ -80,7 +80,7 @@ module.exports = function(app, socket)
 					});
 					customerDay.bulkCreate(customerDays).then(function(cDays){
 						
-				//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
+				//method to pass the new customer int othe view customer page so that it can be displayed within the table 
 						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
 							//console.log(err)
 							//	console.log(html)
@@ -98,7 +98,8 @@ module.exports = function(app, socket)
 			})
 		});
 	});
-	//customer.update({userId:uID},{where:{}});
+
+						console.log("saved");
 });
 		
 
@@ -120,9 +121,9 @@ module.exports = function(app, socket)
 					where:{
 						id:customerID
 					},
-					include:[mealRequirement]
+					include:[mealRequirement, user]
 				}).then(function(customers){
-					res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:customers[0]});
+					res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:customers[0], user:customers[0].user});
 				});
 			});
 	});
@@ -245,7 +246,7 @@ module.exports = function(app, socket)
 				}
 			})
 			.then(function(cust){
-				drive.addCustomers(cust)
+				drive[0].addCustomers(cust)
 				.then(function(driver){
 					res.send(JSON.stringify({ driver: driver }));
 				});

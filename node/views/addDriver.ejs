@@ -9,7 +9,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="driverStatus">Driver status</label>
-                                    <select class="form-control" id="driverStatus">
+                                    <select class="form-control" id="driverStatus" ng-model="saveDriver['driverStatus']">
                                         <option value="active">Active</option>
                                         <option value="notActive">Not active</option>
                                     </select>
@@ -57,9 +57,9 @@
             $http.post('/addDriver', {
 				"user": $scope.saveUser,
                 "driver": $scope.saveDriver
-			},
-            function (response) { $scope.results = response; },
-            function (failure) { console.log("failed : ", failure ); });
+			}).success(function(){
+				window.alert("driver saved");
+			});
         }
     }]);
 
