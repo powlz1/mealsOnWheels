@@ -2,8 +2,9 @@ const Sequelize = require('sequelize');
 const mysql = require('mysql');
 
 //initialising javascript - http://docs.sequelizejs.com/en/v3/docs/getting-started/
-var sequelize = new Sequelize('mow', 'root', '1234', { //change the second
-	host: 'localhost',
+
+var sequelize = new Sequelize('mow', 'root', '1234', { // MySQL login credentials, change the third string from "1234" to root
+	host: '127.0.0.1',
 	dialect: 'mysql',
 
 	pool: {
@@ -50,4 +51,3 @@ db.customer.belongsToMany(db.driver, {through: "customerDriver"});
 db.sequelize.sync();
 
 module.exports = db;
-
