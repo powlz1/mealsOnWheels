@@ -210,7 +210,7 @@ module.exports = function(app, socket)
 	app.get("/getDrivers", function(req,res){
 		//need to add check that this is being accessed by app only
 		//also need to filter this list to provide only the customers for today, + eventually for a particular driver
-		driver.findAll()
+		driver.findAll({include:[user]})
 		.then(function(drivers){
 			res.send(JSON.stringify({ drivers:drivers }));
 		});
