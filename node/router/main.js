@@ -11,6 +11,8 @@ var mealRequirement = db.mealRequirement;
 var customerDay = db.customerDay;
 var driver = db.driver;
 var user = db.user;
+var ensureLogin = require('connect-ensure-login')
+var passport = require('passport');
 
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -42,7 +44,7 @@ module.exports = function(app, passport, socket)
 		});
 	});
 	
-	app.get('/viewCustomers', isLoggedIn, function (req, res){
+	app.get('/viewCustomers', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /viewCustomers');		
 		
 		customer.findAll({include:[mealRequirement]})
@@ -98,7 +100,7 @@ module.exports = function(app, passport, socket)
 });
 		
 
-	app.get('/addCustomer', isLoggedIn, function (req, res){
+	app.get('/addCustomer', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /addCustomer');
 		mealRequirementCategory.findAll({include:[mealRequirement]})
 			.then(function(mrcats){
@@ -107,7 +109,7 @@ module.exports = function(app, passport, socket)
 	});
 
 
-	app.get('/editCustomer/:customerID', isLoggedIn, function (req, res){
+	app.get('/editCustomer/:customerID', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /addCustomers');
 		var customerID = req.params.customerID;
 		mealRequirementCategory.findAll({include:[mealRequirement]})
@@ -123,7 +125,7 @@ module.exports = function(app, passport, socket)
 			});
 	});
 
-	app.get('/mealOptions', isLoggedIn, function (req, res){
+	app.get('/mealOptions', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /mealOptions');
 		mealRequirementCategory.findAll({include:[mealRequirement]})
 		.then(function(mrcats){
@@ -161,12 +163,12 @@ module.exports = function(app, passport, socket)
 		});
 	});
 	
-	app.get('/addDriver', isLoggedIn, function(req,res){
+	app.get('/addDriver', ensureLogin.ensureLoggedIn(), function(req,res){
 		console.log('GET /addDriver')
 		res.render('main.ejs', {page:"addDriver", driver:{}});
 	});
 	
-		app.get("/maps", isLoggedIn, function(req,res){
+		app.get("/maps", ensureLogin.ensureLoggedIn(), function(req,res){
 		customer.findAll()
 		.then(function(customers){
 			res.render('main.ejs', {page:"maps", customers:customers});
@@ -186,7 +188,7 @@ module.exports = function(app, passport, socket)
 	});
 	
 	// is this a duplicate? ******************
-	app.get('/addDriver', isLoggedIn, function (req, res){
+	app.get('/addDriver', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /addDriver');
 		res.render('main.ejs', {page:"addDriver", driver:{}});
 	});
@@ -236,7 +238,14 @@ module.exports = function(app, passport, socket)
 		res.render('login.ejs', { message: req.flash('loginMessage') });
 	});
 
-	// process the login form
+	// // process the login form
+ //    app.post('/login',
+	// passport.authenticate('local-signup', { successReturnToOrRedirect: '/home', failureRedirect: '/login' }),
+	// function(req, res) {
+	//     console.log ('redirect to login');
+	//     res.render('main.ejs', {page:"index.ejs"});
+	//   });
+    // process the login form
 	app.post('/login', passport.authenticate('local-login', {
            // successRedirect : '/profile', // redirect to the secure profile section
             failureRedirect : '/login', // redirect back to the signup page if there is an error
@@ -273,8 +282,8 @@ module.exports = function(app, passport, socket)
 	// PROFILE SECTION =========================
 	// =====================================
 	// we will want this protected so you have to be logged in to visit
-	// we will use route middleware to verify this (the isLoggedIn function)
-	app.get('/profile', isLoggedIn, function(req, res) {
+	// we will use route middleware to verify
+	app.get('/profile', ensureLogin.ensureLoggedIn(), function(req, res) {
 		res.render('profile.ejs', {
 			user : req.user // get the user out of session and pass to template
 		});
@@ -289,15 +298,3 @@ module.exports = function(app, passport, socket)
 	});
 };
 
-
-
-// route middleware to make sure
-function isLoggedIn(req, res, next) {
-
-	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
-
-	// if they aren't redirect them to the home page
-	res.redirect('/login');
-}
