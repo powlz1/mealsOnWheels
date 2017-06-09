@@ -4,20 +4,11 @@
     
 	    <% include partials/customerList.ejs %>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
-<<<<<<< HEAD
-			
 		<script>	
 var socket = io.connect("localhost:3000");
 	<!-- get the customer from main within router and log it into the page -->
 	socket.on('get_Customer', function(customer)
 
-=======
-		<script>
-		
-var socket = io.connect("localhost:3000");
-	<!-- get the customer from main within router and dispaly it on this page -->
-	socket.on('zak', function(customer,user)
->>>>>>> origin/production
 	{
 		console.log(customer);
 		$("#CustomerTable").append(customer,user);
