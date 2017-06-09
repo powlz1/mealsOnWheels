@@ -18,13 +18,9 @@ var passport = require('passport');
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-<<<<<<< HEAD
-=======
 // Counts how many individual keys there are
 var countOfKeys = [db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count'];
 
-
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 module.exports = function(app, socket)
 {
 	//////////////////////////////////////////////
@@ -71,11 +67,7 @@ module.exports = function(app, socket)
 		});
 	});
 	
-<<<<<<< HEAD
 	app.get('/viewCustomers', ensureLogin.ensureLoggedIn(), function (req, res){
-=======
-	app.get('/viewCustomers', function (req, res) {
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 		console.log ('GET /viewCustomers');		
 
 		// Find all the customers, include the mealRequirement and user tables
@@ -106,27 +98,14 @@ module.exports = function(app, socket)
 
 			// Create a customer and pass through the very well named "c" variable
 				customer.create(c)
-<<<<<<< HEAD
-					.then(function(customer){
-=======
 				// A callback that could be put into it's own function and just passed through as "then" is a higher-order function
 					.then(function(customer) {
 						// Find all the meal requirements
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 						mealRequirement.findAll({
 							where:{
 								// Set the ID of the meal requirement from the post request
 								id: req.body.mealRequirements
 							}
-<<<<<<< HEAD
-						})
-					.then(function(mealRequirements){
-						customer.addMealRequirements(mealRequirements)
-							.then(function(){
-								var customerDays = [];
-								var dayKeys = Object.keys(req.body.customerDay);
-					dayKeys.forEach(function(day){
-=======
 						}) // Callback
 							.then(function(mealRequirements){
 								// Add the meal requirement to the customer
@@ -138,7 +117,6 @@ module.exports = function(app, socket)
 					// Iterate over the daykeys passing through the result of the last callback as "day"
 					dayKeys.forEach(function(day) {
 						// "obj" because that is also a descriptive name for the customer day object
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 						var obj = req.body.customerDay[day];
 						// No sarcasm: good name. Make sure everything is descriptive
 						// Array of meal keys from the "obj" object (from the object of customerDay)
@@ -156,24 +134,8 @@ module.exports = function(app, socket)
 					}); // end adayKeys.forEach
 
 					// Inserts multiple customerDays into the customerDay table
-					customerDay.bulkCreate(customerDays).then(function(cDays) {
-<<<<<<< HEAD
-						
-<<<<<<< HEAD
-				//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
-						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
-							//console.log(err)
-							//	console.log(html)
-							customerDay.findAll({
-								attributes: ['key','day',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
-								group: ["key", "day"]
-							}).then(function(allCustomerDays){
-								socket.emit('get_Customer_Days', allCustomerDays);
-=======
-=======
-				
+					customerDay.bulkCreate(customerDays).then(function(cDays) {		
 				//method to pass the new customer int othe view customer page so that it can be displayed within the table 
->>>>>>> 593f14f03c18150fb3fe55fe9421ddccad15bf82
 						// Commented code is old code. Use at own risk
 						//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
 						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
@@ -188,10 +150,9 @@ module.exports = function(app, socket)
 								// Group by key and day
 								group: ["key", "day"]
 							}).then(function(allCustomerDays) { // Pass through all the found customerDays
-// here be dragons
+					// here be dragons
 					// Tells the socket.io to get the customer days again
 						socket.emit('get_Customer_Days', allCustomerDays);
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 							});
 						
 						// Send a JSON response and stringify all the info
@@ -360,8 +321,6 @@ module.exports = function(app, socket)
 		})
 	 });		
 		
-	
-<<<<<<< HEAD
 	//Passport routes=================================================================
 	// =====================================
 	// HOME PAGE (with login links) ========
@@ -439,6 +398,4 @@ module.exports = function(app, socket)
 		res.redirect('/');
 	});
 	
-=======
->>>>>>> 173a2df6c6946f1b059a6a08b6727060a0f77ab1
 }//closes route function
