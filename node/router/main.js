@@ -13,99 +13,162 @@ var user = db.user;
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
+// Counts how many individual keys there are
+var countOfKeys = [db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count'];
+
 
 module.exports = function(app, socket)
 {
-
+	//////////////////////////////////////////////
+	// Index page
 	app.get(['/', '/index'], function (req, res) {
+		// For debugging purposes
 		console.log ('GET /index');
 
+		// Gets the name of today's date and stores it
 		var today = days[new Date().getDay()];
 
+		
+
+		// Sequelize statement to find all customer days
 		customerDay.findAll({
+			// Where clause
 			where: {
-				day:today
+				// Will find all customerdays for whichever day of the week today is
+				day: today
 			},
-			attributes: ['key',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+
+			// 
+			attributes: ['key', countOfKeys],
+
+			// Groups everything by the key
 			group: ["key"]
+
+		// Callback, passing in the results of the final all statement
 		}).then(function(customerDays) {
-			console.log(customerDays);
+			console.log(customerDays);			
 			
 			customerDay.findAll({
-				attributes: ['key','day',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+				// idek fam
+				attributes: ['key','day', countOfKeys],
+
+				// Sort by key, then by day
 				group: ["key", "day"]
+
+			// Another callback passing in the results of the find all statement -- ask Adon about callback hell
 			}).then(function(allCustomerDays){
-				res.render('main.ejs', {page:"index", today:today, customerDays:customerDays,allCustomerDays:allCustomerDays});
+				// Render the page and pass variables from today, the previous findall statement, and the one before
+				res.render('main.ejs', {page: "index", today: today, customerDays: customerDays, allCustomerDays: allCustomerDays});
 			});
 		});
 	});
 	
-	app.get('/viewCustomers', function (req, res){
+	app.get('/viewCustomers', function (req, res) {
 		console.log ('GET /viewCustomers');		
+
+		// Find all the customers, include the mealRequirement and user tables
 		customer.findAll({include:[mealRequirement,user]})
-		.then(function(customers){
-			console.log();
-			res.render('main.ejs', {page:"viewCustomers", customers:customers});
- 		});
+			.then(function(customers) {
+
+				// Render the viewCustomers page, passing through all the customers
+				res.render('main.ejs', {page:"viewCustomers", customers:customers});
+			});
 	});
 	
 	app.post('/addCustomers', function (req, res){
 		console.log(req.body);
 		console.log ('POST /addCustomers');
-		var c = req.body.customer;
-		var uID = user.id;		
 
+		// C, being a very programmer friendly name, is the customer variable from the post request
+		var c = req.body.customer;
+
+		// User ID variable
+		var uID = user.id;
+
+		// Create a new customer
 		user.create(req.body.user).then(function(user){
+			// Inconconsistent indentation AHOY!
+
+			// Make customer variable and user varialbe have the same ID
 			c.userId = user.id;
+
+			// Create a customer and pass through the very well named "c" variable
 				customer.create(c)
-					.then(function(customer){
+				// A callback that could be put into it's own function and just passed through as "then" is a higher-order function
+					.then(function(customer) {
+						// Find all the meal requirements
 						mealRequirement.findAll({
 							where:{
-								id:req.body.mealRequirements
+								// Set the ID of the meal requirement from the post request
+								id: req.body.mealRequirements
 							}
-						})
+						}) // Callback
 							.then(function(mealRequirements){
+								// Add the meal requirement to the customer
 								customer.addMealRequirements(mealRequirements)
 									.then(function(){
 										var customerDays = [];
 										var dayKeys = Object.keys(req.body.customerDay);
 
-					dayKeys.forEach(function(day){
+					// Iterate over the daykeys passing through the result of the last callback as "day"
+					dayKeys.forEach(function(day) {
+						// "obj" because that is also a descriptive name for the customer day object
 						var obj = req.body.customerDay[day];
+						// No sarcasm: good name. Make sure everything is descriptive
+						// Array of meal keys from the "obj" object (from the object of customerDay)
 						var mealKeys = Object.keys(obj);
-						mealKeys.forEach(function(key){
+
+						// Iterate over the mealKeys
+						mealKeys.forEach(function(key) {
+							// New customer object with stuff from previous callbacks added in
+							// NB: I'm adding in all these comments after the fact -- don't do this
 							var c = {'day':day,'key':key,'customerId':customer.id};
+
+							// Add "c" to the customerDays
 							customerDays.push(c);
 						});
-					});
-					customerDay.bulkCreate(customerDays).then(function(cDays){
+					}); // end adayKeys.forEach
+
+					// Inserts multiple customerDays into the customerDay table
+					customerDay.bulkCreate(customerDays).then(function(cDays) {
 						
-				//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
+						// Commented code is old code. Use at own risk
+						//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
 						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
 							//console.log(err)
 							//	console.log(html)
+
+							// Find all customers
 							customerDay.findAll({
-								attributes: ['key','day',[db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count']],
+								// 
+								attributes: ['key','day', countOfKeys],
+
+								// Group by key and day
 								group: ["key", "day"]
-							}).then(function(allCustomerDays){
-				
+							}).then(function(allCustomerDays) { // Pass through all the found customerDays
+// here be dragons
+					// Tells the socket.io to get the customer days again
 						socket.emit('get_Customer_Days', allCustomerDays);
 							});
-									
+						
+						// Send a JSON response and stringify all the info
 						res.send(JSON.stringify({ customer: customer }));
-					})
-				});
-			})
-		});
-	});
+					}); // end customerDay.bulkCreate.then
+				}); // End customer.addMealRequirements.then
+			}); // end mealRequirement.findAll.then
+		}); // end customer.create.then
+	}); // end user.create.then
 	//customer.update({userId:uID},{where:{}});
-});
+}); // end app.get callback
 		
 
 	app.get('/addCustomer', function (req, res){
 		console.log ('GET /addCustomer');
+
+		// Find all the meal requirement categories with the mealrequirement foreign key
 		mealRequirementCategory.findAll({include:[mealRequirement]})
-			.then(function(mrcats){
+			.then(function(mrcats){ // short for meal requirement category
+				// Render the addCustomer page, passing through all meal requirements, an empty customer object, and an empty user object
 				res.render('main.ejs', {page:"addCustomer", mrcats:mrcats, customer:{}, user:{}});
 			});
 	});
