@@ -26,8 +26,16 @@
 	};
 	
 	var calendarEvents = [];
+<<<<<<< HEAD
 	
 	var calendar = {
+=======
+
+	$(document).ready(function() 
+	{ 
+		// page is now ready, initialize the calendar...
+		$('#calendar').fullCalendar({
+>>>>>>> origin/production
 			// put your options and callbacks here
 			events: calendarEvents,
 			header: {
@@ -45,6 +53,7 @@
 				element.find('.fc-list-item-time').replaceWith("<td class ='fc-list-item-time fc-widget-content'>" + event.title + "</td>");
 				element.find('.fc-list-item-title').replaceWith("<td class ='fc-list-item-title fc-widget-content'>Quantity: " + event.numberOfMeals + "</td>"); 
 			} 
+<<<<<<< HEAD
 		};
 
 	$(document).ready(function() 
@@ -76,6 +85,12 @@ var socket = io.connect("localhost:3000");
 	});
 	</script>
 
+=======
+		})
+	});
+</script>
+
+>>>>>>> origin/production
 
 <div class="row">
 

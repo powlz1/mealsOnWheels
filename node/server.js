@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // server.js
 
 // set up ======================================================================
@@ -36,6 +37,16 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+=======
+var express = require('express');
+var fs = require ('fs');
+var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+>>>>>>> origin/production
 
 app.use(express.static(__dirname + '/public')); 
 app.set('views',__dirname + '/views');
@@ -48,9 +59,14 @@ var server = app.listen(3000,function(){
     console.log("Express is running on port 3000");
 });
 
+<<<<<<< HEAD
 // socket ======================================================================
 var socket = require('./socket.js')(server);
 
 // routes ======================================================================
+=======
+var socket = require('./socket.js')(server);
+ 
+>>>>>>> origin/production
 require('./router/main')(app, socket);
 

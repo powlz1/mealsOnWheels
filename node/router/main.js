@@ -11,12 +11,19 @@ var mealRequirement = db.mealRequirement;
 var customerDay = db.customerDay;
 var driver = db.driver;
 var user = db.user;
+<<<<<<< HEAD
 var ensureLogin = require('connect-ensure-login')
 var passport = require('passport');
 
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
+=======
+
+//utility day array
+var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+>>>>>>> origin/production
 
 module.exports = function(app, socket)
 {
@@ -44,7 +51,11 @@ module.exports = function(app, socket)
 		});
 	});
 	
+<<<<<<< HEAD
 	app.get('/viewCustomers', ensureLogin.ensureLoggedIn(), function (req, res){
+=======
+	app.get('/viewCustomers', function (req, res){
+>>>>>>> origin/production
 		console.log ('GET /viewCustomers');		
 		customer.findAll({include:[mealRequirement,user]})
 		.then(function(customers){
@@ -63,16 +74,30 @@ module.exports = function(app, socket)
 			c.userId = user.id;
 				customer.create(c)
 					.then(function(customer){
+<<<<<<< HEAD
+=======
+			
+				
+			
+>>>>>>> origin/production
 						mealRequirement.findAll({
 							where:{
 								id:req.body.mealRequirements
 							}
 						})
+<<<<<<< HEAD
 							.then(function(mealRequirements){
 								customer.addMealRequirements(mealRequirements)
 									.then(function(){
 										var customerDays = [];
 										var dayKeys = Object.keys(req.body.customerDay);
+=======
+					.then(function(mealRequirements){
+						customer.addMealRequirements(mealRequirements)
+							.then(function(){
+								var customerDays = [];
+								var dayKeys = Object.keys(req.body.customerDay);
+>>>>>>> origin/production
 
 					dayKeys.forEach(function(day){
 						var obj = req.body.customerDay[day];
@@ -84,6 +109,7 @@ module.exports = function(app, socket)
 					});
 					customerDay.bulkCreate(customerDays).then(function(cDays){
 						
+<<<<<<< HEAD
 				//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
 						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
 							//console.log(err)
@@ -94,6 +120,12 @@ module.exports = function(app, socket)
 							}).then(function(allCustomerDays){
 				
 						socket.emit('get_Customer_Days', allCustomerDays);
+=======
+						app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
+							//console.log(err)
+						//	console.log(html)
+						socket.emit('zak', html);
+>>>>>>> origin/production
 							});
 									
 						res.send(JSON.stringify({ customer: customer }));
@@ -175,7 +207,11 @@ module.exports = function(app, socket)
 	});
 	
 	app.get("/maps", function(req,res){
+<<<<<<< HEAD
 	customer.findAll({include:[user]})
+=======
+	customer.findAll()
+>>>>>>> origin/production
 	.then(function(customers){
 		res.render('main.ejs', {page:"maps", customers:customers});
 		});
@@ -193,7 +229,10 @@ module.exports = function(app, socket)
 		});
 	});
 	
+<<<<<<< HEAD
 	// is this a duplicate? ******************
+=======
+>>>>>>> origin/production
 	app.get('/addDriver', function (req, res){
 		console.log ('GET /addDriver');
 		res.render('main.ejs', {page:"addDriver", driver:{}});
@@ -220,6 +259,7 @@ module.exports = function(app, socket)
 			res.send(JSON.stringify({ drivers:drivers }));
 		});
 	});
+<<<<<<< HEAD
 	
 	app.get("/customerDriver", function(req,res){
 		console.log ('GET /customerDriver');
@@ -337,3 +377,6 @@ module.exports = function(app, socket)
 	});
 	
 }//closes route function
+=======
+}
+>>>>>>> origin/production

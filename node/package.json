@@ -17,6 +17,7 @@
     "sqlite3": "^3.1.8",
     "tedious": "^1.14.0",
 	"body-parser":"*",
+<<<<<<< HEAD
 	"socket.io":"*",
 	"bcrypt-nodejs": "0.0.3",
     "connect-flash": "^0.1.1",
@@ -26,5 +27,8 @@
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",
     "connect-ensure-login": "*"
+=======
+	"socket.io":"*"
+>>>>>>> origin/production
   }
 }

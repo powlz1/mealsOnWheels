@@ -12,7 +12,11 @@
     </thead>
     <tbody>
 		<% if (typeof customers != 'undefined') { %>
+<<<<<<< HEAD
 	    	<% customers.forEach(function(customer){ %>
+=======
+	    	<% customers.forEach(function(customer,user){ %>
+>>>>>>> origin/production
 		    	<% include customer.ejs %>
 		    <% }); %>
 		<% } %>
