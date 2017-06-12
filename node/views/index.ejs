@@ -46,7 +46,6 @@
 				element.find('.fc-list-item-title').replaceWith("<td class ='fc-list-item-title fc-widget-content'>Quantity: " + event.numberOfMeals + "</td>"); 
 			} 
 		};
-
 	$(document).ready(function() 
 	{ 
 		// page is now ready, initialize the calendar...
@@ -87,7 +86,6 @@ var socket = io.connect("localhost:3000");
 		
 			<% allCustomerDays.forEach(function(e){%>
 				<script type="text/javascript">
-
 				var calendarEvent = {};
 				calendarEvent.title = "<%=e.dataValues['key']%>";
 				calendarEvent.dow = [days["<%=e.dataValues['day']%>"]];
@@ -95,7 +93,6 @@ var socket = io.connect("localhost:3000");
 				calendarEvent.numberOfMeals = "<%=e.dataValues['count']%>";
 				
 				calendarEvents.push(calendarEvent);
-
 				</script>
 			<% }); %>
 		

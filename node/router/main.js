@@ -1,3 +1,5 @@
+// routes/main.js
+
 /*var orm 	   =  	require('../orm.js');
 var Sequelize  =    require('sequelize');
 var customer = Sequelize.define('customer',orm.Customer);*/
@@ -11,12 +13,14 @@ var driver = db.driver;
 var user = db.user;
 var customerDriver = db.customerDriver;
 
+var ensureLogin = require('connect-ensure-login')
+var passport = require('passport');
+
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 // Counts how many individual keys there are
 var countOfKeys = [db.sequelize.fn('COUNT', db.sequelize.col('key')), 'count'];
-
 
 module.exports = function(app, socket)
 {
@@ -63,7 +67,7 @@ module.exports = function(app, socket)
 		});
 	});
 	
-	app.get('/viewCustomers', function (req, res) {
+	app.get('/viewCustomers', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /viewCustomers');		
 
 		// Find all the customers, include the mealRequirement and user tables
@@ -114,8 +118,7 @@ module.exports = function(app, socket)
 						});
 
 					// Inserts multiple customerDays into the customerDay table
-					customerDay.bulkCreate(customerDays).then(function(cDays) {
-				
+					customerDay.bulkCreate(customerDays).then(function(cDays) {		
 				//method to pass the new customer int othe view customer page so that it can be displayed within the table 
 							// Find all customers
 							customerDay.findAll({
@@ -124,7 +127,7 @@ module.exports = function(app, socket)
 								// Group by key and day
 								group: ["key", "day"]
 							}).then(function(allCustomerDays) { // Pass through all the found customerDays
-
+							
 					// Tells the socket.io to get the customer days again
 						socket.emit('get_Customer_Days', allCustomerDays);
 							});
@@ -143,7 +146,7 @@ module.exports = function(app, socket)
 	});		// end app.get callback
 		
 
-	app.get('/addCustomer', function (req, res){
+	app.get('/addCustomer', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /addCustomer');
 
 		// Find all the meal requirement categories with the mealrequirement foreign key
@@ -171,7 +174,7 @@ module.exports = function(app, socket)
 			});
 	});
 
-	app.get('/mealOptions', function (req, res){
+	app.get('/mealOptions', ensureLogin.ensureLoggedIn(), function (req, res){
 		console.log ('GET /mealOptions');
 		mealRequirementCategory.findAll({include:[mealRequirement]})
 		.then(function(mrcats){
@@ -308,5 +311,81 @@ module.exports = function(app, socket)
 		
 	});*/
 		
+	//Passport routes=================================================================
+	// =====================================
+	// HOME PAGE (with login links) ========
+	// =====================================
+	app.get('/home', function(req, res) {
+		res.render('index.ejs'); // load the index.ejs file
+	});
+
+	//=====================================
+	//LOGIN ===============================
+	//=====================================
+	//show the login form
+	app.get('/login', function(req, res) {
+
+		// render the page and pass in any flash data if it exists
+		res.render('login.ejs', { message: req.flash('loginMessage') });
+	});
+
+	// // process the login form
+ //    app.post('/login',
+	// passport.authenticate('local-signup', { successReturnToOrRedirect: '/home', failureRedirect: '/login' }),
+	// function(req, res) {
+	//     console.log ('redirect to login');
+	//     res.render('main.ejs', {page:"index.ejs"});
+	//   });
+    // process the login form
+	app.post('/login', passport.authenticate('local-login', {
+           // successRedirect : '/profile', // redirect to the secure profile section
+            failureRedirect : '/login', // redirect back to the signup page if there is an error
+            failureFlash : true // allow flash messages
+		}),
+        function(req, res) {
+            console.log("hello");
+
+            if (req.body.remember) {
+              req.session.cookie.maxAge = 1000 * 60 * 3;
+            } else {
+              req.session.cookie.expires = false;
+            }
+        res.redirect('/');
+    });
+
+	// =====================================
+	// SIGNUP ==============================
+	// =====================================
+	// show the signup form
+	app.get('/signup', function(req, res) {
+		// render the page and pass in any flash data if it exists
+		res.render('signup.ejs', { message: req.flash('signupMessage') });
+	});
+
+	// process the signup form
+	app.post('/signup', passport.authenticate('local-signup', {
+		//successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/signup', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
+
+	// =====================================
+	// PROFILE SECTION =========================
+	// =====================================
+	// we will want this protected so you have to be logged in to visit
+	// we will use route middleware to verify
+	app.get('/profile', ensureLogin.ensureLoggedIn(), function(req, res) {
+		res.render('profile.ejs', {
+			user : req.user // get the user out of session and pass to template
+		});
+	});
+
+	// =====================================
+	// LOGOUT ==============================
+	// =====================================
+	app.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
+	});
 	
 		}//closes route function

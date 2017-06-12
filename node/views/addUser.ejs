@@ -1,0 +1,58 @@
+<div class="row" ng-app="addUser" ng-init='mrcats = <%- JSON.stringify(mrcats) %>'>
+    <div class="col-md-6 mt-4">
+        <div ng-controller="UserCtrl">
+            <div class="card">
+                <h3 class="card-header bg-success text-white">New User</h3>
+                <div class="card-block">
+                    <form ng-submit="search()">
+                        <% field = {fieldId:"firstName",fieldName: "First name"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"lastName",fieldName: "Last name"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"passwd",fieldName: "Password"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <% field = {fieldId:"email",fieldName: "Email address"} %>
+                        <% include partials/customerInput.ejs %>
+
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+
+ angular.module('AddUser', [])
+  .controller('UserCtrl', ['$scope', '$http', function ($scope, $http) {
+
+
+      $scope.user = {};
+      $scope.results = [];
+	  
+      $scope.search = function () {
+	   var firstName = document.getElementById("firstName").value;
+	   var lastName = document.getElementById("lastName").value;
+	   var email = document.getElementById("email").value;
+       var passwd = document.getElementById("passwd").value;
+	  
+          /* the $http service allows you to make arbitrary ajax requests.
+           * in this case you might also consider using angular-resource and setting up a
+           * User $resource. */
+		   console.log("clicked");
+
+          $http.post('/addUsers', { 
+										"firstName" : firstName,
+										"lastName" : lastName,
+										"email" : email,
+                                        "passwd" : passwd
+										},
+            function (response) { $scope.results = response; },
+            function (failure) { console.log("failed : ", failure ); });
+      }
+  }]);
+
+</script>
