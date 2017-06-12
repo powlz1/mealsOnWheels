@@ -9,6 +9,7 @@ var mealRequirement = db.mealRequirement;
 var customerDay = db.customerDay;
 var driver = db.driver;
 var user = db.user;
+var customerDriver = db.customerDriver;
 
 //utility day array
 var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -49,13 +50,12 @@ module.exports = function(app, socket)
 			console.log(customerDays);			
 			
 			customerDay.findAll({
-				// idek fam
 				attributes: ['key','day', countOfKeys],
 
 				// Sort by key, then by day
 				group: ["key", "day"]
 
-			// Another callback passing in the results of the find all statement -- ask Adon about callback hell
+			// Another callback passing in the results of the find all statement
 			}).then(function(allCustomerDays){
 				// Render the page and pass variables from today, the previous findall statement, and the one before
 				res.render('main.ejs', {page: "index", today: today, customerDays: customerDays, allCustomerDays: allCustomerDays});
@@ -79,7 +79,7 @@ module.exports = function(app, socket)
 		console.log(req.body);
 		console.log ('POST /addCustomers');
 
-		// C, being a very programmer friendly name, is the customer variable from the post request
+		// customer variable from the post request
 		var c = req.body.customer;
 
 		// User ID variable
@@ -87,67 +87,44 @@ module.exports = function(app, socket)
 
 		// Create a new customer
 		user.create(req.body.user).then(function(user){
-			// Inconconsistent indentation AHOY!
-
-			// Make customer variable and user varialbe have the same ID
+			
 			c.userId = user.id;
 
-			// Create a customer and pass through the very well named "c" variable
 				customer.create(c)
-				// A callback that could be put into it's own function and just passed through as "then" is a higher-order function
 					.then(function(customer) {
-						// Find all the meal requirements
 						mealRequirement.findAll({
 							where:{
-								// Set the ID of the meal requirement from the post request
 								id: req.body.mealRequirements
 							}
-						}) // Callback
 							.then(function(mealRequirements){
-								// Add the meal requirement to the customer
 								customer.addMealRequirements(mealRequirements)
 									.then(function(){
 										var customerDays = [];
 										var dayKeys = Object.keys(req.body.customerDay);
 
-					// Iterate over the daykeys passing through the result of the last callback as "day"
 					dayKeys.forEach(function(day) {
-						// "obj" because that is also a descriptive name for the customer day object
 						var obj = req.body.customerDay[day];
-						// No sarcasm: good name. Make sure everything is descriptive
-						// Array of meal keys from the "obj" object (from the object of customerDay)
 						var mealKeys = Object.keys(obj);
 
 						// Iterate over the mealKeys
 						mealKeys.forEach(function(key) {
-							// New customer object with stuff from previous callbacks added in
-							// NB: I'm adding in all these comments after the fact -- don't do this
 							var c = {'day':day,'key':key,'customerId':customer.id};
 
-							// Add "c" to the customerDays
 							customerDays.push(c);
 						});
-					}); // end adayKeys.forEach
 
 					// Inserts multiple customerDays into the customerDay table
 					customerDay.bulkCreate(customerDays).then(function(cDays) {
 				
 				//method to pass the new customer int othe view customer page so that it can be displayed within the table 
-						// Commented code is old code. Use at own risk
-						//methiod to pass the new customer int othe view customer page so that it can be displayed within the table 
-						//app.render('partials/customer.ejs', {customer:customer}, function(err, html) {
-							//console.log(err)
-							//	console.log(html)
-
 							// Find all customers
 							customerDay.findAll({
-								// 
 								attributes: ['key','day', countOfKeys],
 
 								// Group by key and day
 								group: ["key", "day"]
 							}).then(function(allCustomerDays) { // Pass through all the found customerDays
-// here be dragons
+
 					// Tells the socket.io to get the customer days again
 						socket.emit('get_Customer_Days', allCustomerDays);
 							});
@@ -158,10 +135,12 @@ module.exports = function(app, socket)
 					}); // end customerDay.bulkCreate.then
 				}); // End customer.addMealRequirements.then
 			}); // end mealRequirement.findAll.then
-		}); // end customer.create.then
+		}) // end customer.create.then
 	}); // end user.create.then
 	//customer.update({userId:uID},{where:{}});
-}); // end app.get callback
+});
+		});
+	});		// end app.get callback
 		
 
 	app.get('/addCustomer', function (req, res){
@@ -243,16 +222,12 @@ module.exports = function(app, socket)
 	});
 	
 	
-
-	//API url for mobile app
-	app.get("/getAddresses", function(req,res){
-		//need to add check that this is being accessed by app only
-		//also need to filter this list to provide only the customers for today, + eventually for a particular driver
-		customer.findAll({include:[user]})
-		.then(function(customers){
-			res.send(JSON.stringify({ customers:customers }));
-		});
-	});
+//doesn't work
+	app.get("/getAddresses/:driverId", function(req,res){
+		var id = req.params.driverId;
+		customerDriver.findAll({where:{driverId:driver.id}})
+			.then(function(customerDriver){ customer.findAll({where:{id:customerDriver.id}})
+	});});
 	
 	app.get('/addDriver', function (req, res){
 		console.log ('GET /addDriver');
@@ -316,7 +291,22 @@ module.exports = function(app, socket)
 				});
 			})
 		})
-	 });		
+	 });
+
+	/*app.get("/getAddresses", function(req,res){
+		
+		
+		
+		
+		
+		
+		
+		customerDriver.findAll({include:[customer,driver]})
+		.then(function(customerDriver){
+			res.send(JSON.stringify({customerDriver:customerDriver}));
+		});
+		
+	});*/
 		
 	
-}//closes route function
+		}//closes route function
