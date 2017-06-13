@@ -18,7 +18,8 @@ import java.net.URL;
  */
 public class HttpHandler {
 
-    private static final String TAG = HttpHandler.class.getSimpleName();
+    static final String TAG = HttpHandler.class.getSimpleName();
+
 
     public HttpHandler() {
     }

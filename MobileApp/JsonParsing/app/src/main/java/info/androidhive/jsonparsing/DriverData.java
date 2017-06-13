@@ -1,81 +1,70 @@
 package info.androidhive.jsonparsing;
 
 import android.app.ProgressDialog;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+import static android.R.id.list;
 
-    private String TAG = MainActivity.class.getSimpleName();
+/**
+ * Created by sunny on 3/06/2017.
+ */
 
+public class DriverData extends AppCompatActivity {
+    private String TAG = DriverData.class.getSimpleName();
+
+    ArrayAdapter<String> adapter;
     private ProgressDialog pDialog;
+    private ListView lv;
 
-    Button buttonStart;
-    Button buttonStartMap;
-    Button btnDriverData;
 
     // URL to get contacts JSON
-    private static String url = "http://api.androidhive.info/contacts/";
+    private static String url = "http://54.148.120.200:3000/getDrivers";
 
     ArrayList<HashMap<String, String>> contactList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.driver_data);
 
         contactList = new ArrayList<>();
+        lv = (ListView) findViewById(R.id.simpleListView);
 
 
+        new DriverData.GetContacts().execute();
 
-        new GetContacts().execute();
-        buttonStart = (Button) findViewById(R.id.button2);
-        buttonStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), StartActivity.class);
-                intent.putExtra("array", contactList);
-
-                startActivity(intent);
-            }
-        });
-        buttonStartMap = (Button) findViewById(R.id.button);
-        buttonStartMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intents = new Intent(getApplicationContext(), MapsActivity.class);
-                intents.putExtra("array", contactList);
-                startActivity(intents);
-
-            }
-        });
-        btnDriverData = (Button) findViewById(R.id.button4);
-        btnDriverData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intents = new Intent(getApplicationContext(), DriverData.class);
-                startActivity(intents);
-
-            }
-        });
-        if (pDialog.isShowing())
-            pDialog.dismiss();
 
     }
 
@@ -88,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
-            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog = new ProgressDialog(DriverData.this);
             pDialog.setMessage("Please wait...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -109,36 +98,33 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
-                    JSONArray contacts = jsonObj.getJSONArray("contacts");
+                    JSONArray contacts = jsonObj.getJSONArray("drivers");
 
                     // looping through All Contacts
                     for (int i = 0; i < contacts.length(); i++) {
                         JSONObject c = contacts.getJSONObject(i);
 
                         String id = c.getString("id");
-                        String name = c.getString("name");
-                        String email = c.getString("email");
-                        String address = c.getString("address");
-                        String gender = c.getString("gender");
+                        JSONObject user = c.getJSONObject("user");
+                        String firstName = user.getString("firstName");
+                        String lastName = user.getString("lastName");
+
 
                         // Phone node is JSON Object
-                        JSONObject phone = c.getJSONObject("phone");
-                        String mobile = phone.getString("mobile");
-                        String home = phone.getString("home");
-                        String office = phone.getString("office");
+
 
                         // tmp hash map for single contact
                         HashMap<String, String> contact = new HashMap<>();
 
                         // adding each child node to HashMap key => value
                         contact.put("id", id);
-                        contact.put("name", name);
-                        contact.put("email", email);
-                        contact.put("mobile", mobile);
-                        contact.put("address", address);
+                        contact.put("firstName", firstName);
+                        contact.put("lastName", lastName);
 
                         // adding contact to contact list
                         contactList.add(contact);
+
+
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -166,10 +152,39 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             }
-
+            System.out.println(contactList);
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
 
+            // Dismiss the progress dialog
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+
+            //System.out.println(contactList.size());
+
+            /**
+             * Updating parsed JSON data into ListView
+             * */
+
+            ListAdapter adapter = new SimpleAdapter(
+                    DriverData.this, contactList,
+                    R.layout.list_item, new String[]{"firstName", "lastName"
+            }, new int[]{R.id.name, R.id.lastName});
+            lv.setAdapter(adapter);
+
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    String id=contactList.get(position).get("id");
+                    System.out.println(id);
+                }
+            });
+
+        }
     }
 }
