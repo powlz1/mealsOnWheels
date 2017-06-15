@@ -181,7 +181,10 @@ public class DriverData extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     String id=contactList.get(position).get("id");
-                    System.out.println(id);
+                    Toast.makeText(getApplicationContext(),
+                            "customer id is - "  + id,
+                            Toast.LENGTH_LONG)
+                            .show();
                 }
             });
 

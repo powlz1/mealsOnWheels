@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,18 +38,25 @@ public class StartActivity extends AppCompatActivity {
          * */
         Intent intent = getIntent();
         if (intent != null) {
-            ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("array");
+            final ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("array");
             System.out.println(tmp);
-            //Map<String,String> map = tmp.get(2);
-            // String address = map.get("name");
-            // System.out.println(address);
            ListAdapter adapter = new SimpleAdapter(
-                StartActivity.this, tmp,
-                R.layout.list_item, new String[]{"name", "email",
-                "mobile","address"}, new int[]{R.id.name,
-                R.id.email, R.id.mobile,R.id.address});
+                   StartActivity.this, tmp,
+                R.layout.list_item, new String[]{"firstName","lastName", "email",
+                "address","phone"}, new int[]{R.id.name,R.id.lastName,
+                R.id.email, R.id.address,R.id.mobile,});
 
         lv.setAdapter(adapter);
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    String id=tmp.get(position).get("id");
+                    Toast.makeText(getApplicationContext(),
+                            "customer id is - "  + id,
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+            });
         }
 
 

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnDriverData;
 
     // URL to get contacts JSON
-    private static String url = "http://api.androidhive.info/contacts/";
+    private static String url = "http://54.148.120.200:3000/getAddresses";
 
     ArrayList<HashMap<String, String>> contactList;
 
@@ -109,33 +109,32 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
-                    JSONArray contacts = jsonObj.getJSONArray("contacts");
+                    JSONArray contacts = jsonObj.getJSONArray("customers");
 
                     // looping through All Contacts
                     for (int i = 0; i < contacts.length(); i++) {
                         JSONObject c = contacts.getJSONObject(i);
 
                         String id = c.getString("id");
-                        String name = c.getString("name");
-                        String email = c.getString("email");
                         String address = c.getString("address");
-                        String gender = c.getString("gender");
+                        JSONObject user = c.getJSONObject("user");
+                        String firstName = user.getString("firstName");
+                        String lastName = user.getString("lastName");
+                        String email = user.getString("email");
 
-                        // Phone node is JSON Object
-                        JSONObject phone = c.getJSONObject("phone");
-                        String mobile = phone.getString("mobile");
-                        String home = phone.getString("home");
-                        String office = phone.getString("office");
+                        String phone = user.getString("phone");
+
 
                         // tmp hash map for single contact
                         HashMap<String, String> contact = new HashMap<>();
 
                         // adding each child node to HashMap key => value
                         contact.put("id", id);
-                        contact.put("name", name);
+                        contact.put("firstName", firstName);
+                        contact.put("lastName", lastName);
                         contact.put("email", email);
-                        contact.put("mobile", mobile);
                         contact.put("address", address);
+                        contact.put("phone", phone);
 
                         // adding contact to contact list
                         contactList.add(contact);
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             }
-
+            System.out.println(contactList);
             return null;
         }
 
