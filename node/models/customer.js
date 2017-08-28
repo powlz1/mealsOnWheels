@@ -30,17 +30,14 @@ module.exports = (sequelize, DataTypes) => {
             type:DataTypes.STRING,
             field:'adminNotes'
         },
-		lat:{
-			type:DataTypes.INTEGER,
+        latitude:{
+			type:DataTypes.DOUBLE,
             field:'latitude'
 		},
-		lng:{
-			type:DataTypes.INTEGER,
+        longitude:{
+			type:DataTypes.DOUBLE,
             field:'longitude'
-		
 		}
-		
-	
     });
 
     return Customer;

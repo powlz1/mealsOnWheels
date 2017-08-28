@@ -1,25 +1,22 @@
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd3lL6VULqPXaorKesbnBc_s7-jpS9hsQ&callback=initMap"
-    async defer></script>
-	<script>
-	function initMap() {
-	  
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -45.8788, lng: 170.5028},
-          zoom: 8
-        });
-      }
-	  </script>
 <style>
-  #map {
-    height: 600px;
-	border: 2px solid black;
-  }
+	#map {
+		height: 600px;
+		border: 2px solid black;
+	}
 </style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd3lL6VULqPXaorKesbnBc_s7-jpS9hsQ&callback=initMap" async defer></script>
+<script>
+	function initMap() {
+		map = new google.maps.Map(document.getElementById('map'), {
+			center: {lat: -45.8788, lng: 170.5028},
+			zoom: 8
+		});
+	}
+</script>
 
 <div class="row">
-<div class="col-md-9">
-
-    <div id="map"></div>
+	<div class="col-md-9">
+    	<div id="map"></div>
 	</div>
 	
 	<div class="col-md-3">
@@ -49,56 +46,13 @@
 	<%var existingCustomer = [];%>
 	
 	<% customers.forEach(function(customer){ %>
-		console.log("<%= customer.address %>");
-		
-		<% if (customer.latitude) { %>
-			<% existingCustomer.push(customer); %>
-		<% }else{ %>
-			<% tempCustomer.push(customer); %>
-			console.log("temppush");
-		<% } %>
-	
-	<% }); %>
-	
-	<% console.log(existingCustomer); %>
-	<% console.log(tempCustomer); %>
-	
-	<% tempCustomer.forEach(function(tcustomer){ %>
-		var addy="<%= tcustomer.address; %>";
-		var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&location=' + addy + '&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
-		$.get(JSONSTRING, function(data) {
-			console.log("data",data);
-			for (i = 0; i < data.results.length; i++) { 
-			var pos = data.results[i].locations[0].latLng;
-			console.log(pos);
-			var marker = new google.maps.Marker({
-			  position: pos,
-			  map: map
-			});
-			}
+		var pos = {lat:<%= customer.latitude %>, lng:<%= customer.longitude %> };
+		console.log(pos);
+		var marker = new google.maps.Marker({
+			position: pos,
+			map: map
 		});
 	<% }); %>
-	
-	//var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&json={"locations":[{"street":"' + "" + '"},"options":{"thumbMaps":false,"maxResults":"1"}}&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
-	//	var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&json={"locations":[{"street":"' + address1 + '"}],"options":{"thumbMaps":false,"maxResults":"1"}}&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
-		
-		//var addresses = ["37 Maitland Street, Dunedin", "30 Roy Crescent, Dunedin", "114 Harbour Tce, Dunedin"];
-		
-		//https://maps.googleapis.com/maps/api/geocode/json?address=' + addresses[i] + '&key=AIzaSyAd3lL6VULqPXaorKesbnBc_s7-jpS9hsQ
-		
-		/*
-		$.get(JSONSTRING, function(data) {
-			console.log(data);
-			for (i = 0; i < data.results.length; i++) { 
-			var pos = data.results[i].locations[0].latLng;
-			console.log(pos);
-			var marker = new google.maps.Marker({
-			  position: pos,
-			  map: map
-			});
-			}
-		});
-		*/
 		
       var map;
       

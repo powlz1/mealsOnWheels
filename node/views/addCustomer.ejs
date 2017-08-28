@@ -1,3 +1,19 @@
+<style>
+    #map {
+        height: 600px;
+        border: 2px solid black;
+    }
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd3lL6VULqPXaorKesbnBc_s7-jpS9hsQ&callback=initMap" async defer></script>
+<script>
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -45.8788, lng: 170.5028},
+            zoom: 8
+        });
+    }
+</script>
+
 <div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats); %>; customer = <%- JSON.stringify(customer); %>; user = <%- JSON.stringify(user);%>' ng-controller="CustomerCtrl">
     <div class="col-md-6 mt-4">
         <div>
@@ -25,15 +41,30 @@
 
                         <% field = [{fieldId:"firstName",fieldName: "First name"},{fieldId:"lastName",fieldName: "Last name"}];%>
                         <% include partials/customerInputAddUser.ejs %>
-						
-                        <% field = [{fieldId:"username",fieldName: "Username"}, {fieldId:"password",fieldName: "Password"}]; %>
-                        <% include partials/customerInputAddUser.ejs %>
 
-                        <% field = {fieldId:"address",fieldName: "Address"}; %>
-                        <% include partials/customerTextarea.ejs %>
-						
                         <% field = [{fieldId:"email",fieldName: "Email address"}, {fieldId:"phone",fieldName: "Phone number"}]; %>
                         <% include partials/customerInputAddUser.ejs %>
+						
+                        <% field = {fieldId:"address",fieldName: "Address"}; %>
+                        <% include partials/customerTextarea.ejs %>
+
+                        <div class="row mb-4">
+                            <div class="col-md-2 pr-0">
+                                <button id="findAddress" type="button" class="btn btn-success w-100" ng-click="findAddress()">Find</button>
+                            </div>
+                            <div class="col-md-10">
+                                <div id="map"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                Lat: <input type="text" readonly id="lat" value="{{ saveCustomer['latitude'] }}" />
+                            </div>
+                            <div class="col-md-6">
+                                Lng: <input type="text" readonly id="lng" value="{{ saveCustomer['longitude'] }}" />
+                            </div>
+                        </div>
 
                         <% field = {fieldId:"adminNotes",fieldName: "Admin notes"} ;%>
                         <% include partials/customerTextarea.ejs %>
@@ -54,13 +85,13 @@
                         <table class="mt-4 customerDay">
                             <tr>
                                 <th></th>
-                                <th>Monday</th>
-                                <th>Tuesday</th>
-                                <th>Wednesday</th>
-                                <th>Thursday</th>
-                                <th>Friday</th>
-                                <th>Saturday</th>
-                                <th>Sunday</th>
+                                <th>Mon</th>
+                                <th>Tue</th>
+                                <th>Wed</th>
+                                <th>Thu</th>
+                                <th>Fri</th>
+                                <th>Sat</th>
+                                <th>Sun</th>
                             </tr>
                             <% for (var i=0;i<rows.length;i++){%>
                                 <% row = rows[i]; %>
@@ -103,6 +134,7 @@
     </div>
 </div>
 
+
 <script type="text/javascript">
 
     angular.module('AddCustomer', []).controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
@@ -110,8 +142,7 @@
         $scope.customerRequirements = [];
         $scope.customerDay = {};
 		$scope.saveUser = {"firstName":"<%= user.firstName %>", "lastName":"<%= user.lastName %>", "email":"<%= user.email %>","phone":"<%= user.phone %>", "password":"<%= user.password %>",  "username":"<%= user.username %>"};
-
-		$scope.saveCustomer = {"customerNumber":"<%= customer.customerNumber %>", "customerStatus":"<%= customer.customerStatus %>", "adminNotes":"<%= customer.adminNotes %>", "address":"<%= customer.address %>" };
+		$scope.saveCustomer = {"customerNumber":"<%= customer.customerNumber %>", "customerStatus":"<%= customer.customerStatus %>", "adminNotes":"<%= customer.adminNotes %>", "address":"<%= customer.address %>", "latitude":"", "longitude":"" };
 
         $scope.findRequirement = function(customer, mealr){
             var found = false;
@@ -124,7 +155,25 @@
                 }
             return found;
         };
-		
+
+
+        $scope.findAddress = function() {
+            var addy = $("#address").val();
+            var JSONSTRING = 'https://www.mapquestapi.com/geocoding/v1/batch?&inFormat=json&outFormat=json&location=' + addy + '&key=odkd9bxRkGJEPHxlVBwJaDKO74PrYzHA';
+            $.get(JSONSTRING, function (data) {
+                console.log("data", data);
+                for (var i = 0; i < data.results.length; i++) {
+                    var pos = data.results[i].locations[0].latLng;
+                    $scope.saveCustomer['latitude'] = pos.lat;
+                    $scope.saveCustomer['longitude'] = pos.lng;
+                    console.log(pos);
+                    var marker = new google.maps.Marker({
+                        position: pos,
+                        map: map
+                    });
+                }
+            });
+        };
 
         $scope.addCustomer = function () {
             console.log($scope.customerDay);
@@ -134,13 +183,15 @@
                     $scope.customerRequirements.push(value);
             });
 
+            console.log($scope.saveCustomer);
+
             $http.post('/addCustomers', {
                 "customer": $scope.saveCustomer,
                 "mealRequirements":$scope.customerRequirements,
                 "customerDay" : $scope.customerDay,
 				"user":$scope.saveUser
 			}).success(function(){
-				window.alert("customer saved");
+				alert("customer saved");
 			});
 			
         }

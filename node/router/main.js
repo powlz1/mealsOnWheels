@@ -93,56 +93,46 @@ module.exports = function(app, socket)
 		user.create(req.body.user).then(function(user){
 			
 			c.userId = user.id;
+			customer.create(c).then(function(customer) {
+				mealRequirement.findAll({
+					where: {
+						id: req.body.mealRequirements
+					}
+				}).then(function(mealRequirements){
+					customer.addMealRequirements(mealRequirements).then(function(){
+						var customerDays = [];
+						var dayKeys = Object.keys(req.body.customerDay);
 
-				customer.create(c)
-					.then(function(customer) {
-						mealRequirement.findAll({
-							where:{
-								id: req.body.mealRequirements
-							}
-							.then(function(mealRequirements){
-								customer.addMealRequirements(mealRequirements)
-									.then(function(){
-										var customerDays = [];
-										var dayKeys = Object.keys(req.body.customerDay);
+						dayKeys.forEach(function(day) {
+							var obj = req.body.customerDay[day];
+							var mealKeys = Object.keys(obj);
 
-					dayKeys.forEach(function(day) {
-						var obj = req.body.customerDay[day];
-						var mealKeys = Object.keys(obj);
-
-						// Iterate over the mealKeys
-						mealKeys.forEach(function(key) {
-							var c = {'day':day,'key':key,'customerId':customer.id};
-
-							customerDays.push(c);
-						});
-
-					// Inserts multiple customerDays into the customerDay table
-					customerDay.bulkCreate(customerDays).then(function(cDays) {		
-				//method to pass the new customer int othe view customer page so that it can be displayed within the table 
-							// Find all customers
-							customerDay.findAll({
-								attributes: ['key','day', countOfKeys],
-
-								// Group by key and day
-								group: ["key", "day"]
-							}).then(function(allCustomerDays) { // Pass through all the found customerDays
-							
-					// Tells the socket.io to get the customer days again
-						socket.emit('get_Customer_Days', allCustomerDays);
+							// Iterate over the mealKeys
+							mealKeys.forEach(function (key) {
+								var c = {'day': day, 'key': key, 'customerId': customer.id};
+								customerDays.push(c);
 							});
-						
-						// Send a JSON response and stringify all the info
-						res.send(JSON.stringify({ customer: customer }));
 
-					}); // end customerDay.bulkCreate.then
-				}); // End customer.addMealRequirements.then
-			}); // end mealRequirement.findAll.then
-		}) // end customer.create.then
-	}); // end user.create.then
-	//customer.update({userId:uID},{where:{}});
-});
-		});
+							// Inserts multiple customerDays into the customerDay table
+							customerDay.bulkCreate(customerDays).then(function (cDays) {
+								//method to pass the new customer int othe view customer page so that it can be displayed within the table
+								// Find all customers
+								customerDay.findAll({
+									attributes: ['key', 'day', countOfKeys],
+									// Group by key and day
+									group: ["key", "day"]
+								}).then(function (allCustomerDays) { // Pass through all the found customerDays
+									// Tells the socket.io to get the customer days again
+									socket.emit('get_Customer_Days', allCustomerDays);
+								});
+								// Send a JSON response and stringify all the info
+								res.send(JSON.stringify({customer: customer}));
+							}); // end customerDay.bulkCreate.then
+						});
+					}); // End customer.addMealRequirements.then
+				}); // end mealRequirement.findAll.then
+			}); // end customer.create.then
+		}); // end user.create.then
 	});		// end app.get callback
 		
 

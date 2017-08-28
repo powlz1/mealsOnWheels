@@ -1,6 +1,6 @@
 <div class="row" ng-app="AddDriverCustomer" ng-controller="CustomerDriverCtrl">
     <div class="col-md-6">
-		Drivers: <select name="driver" ng-model="driver">
+		Drivers: <select name="driver" ng-model="driver" class="form-control">
 			<option selected disabled>Choose here</option>
 			<% drivers.forEach(function(driver){ %>	
 					<option value="<%=driver.id %>"><%=driver.user.firstName %> <%=driver.user.lastName %></option>
@@ -8,7 +8,7 @@
 		</select>
 	</div>
 	<div class="col-md-6">
-		Customers: <select name="customer" ng-model="customer">
+		Customers: <select name="customer" ng-model="customer" class="form-control">
 			<option selected disabled>Choose here</option>
 				<% customers.forEach(function(customer){ %>	
 					<option value="<%=customer.id %>"><%=customer.user.firstName %> <%=customer.user.lastName %></option>

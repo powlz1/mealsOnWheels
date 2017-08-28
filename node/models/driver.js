@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
             field:'driverStatus'
         },
 		licenceNumber:{
-			type:DataTypes.INTEGER,
+			type:DataTypes.STRING,
 			field:'licenceNumber'
 		},
 		licencePlate:{
