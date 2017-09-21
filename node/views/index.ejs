@@ -49,7 +49,10 @@
 	$(document).ready(function() 
 	{ 
 		// page is now ready, initialize the calendar...
-		$('#calendar').fullCalendar(calendar);
+		
+		if(<%= sunny %>)
+			$('#calendar').fullCalendar(calendar);
+		
 	});
 </script>
 

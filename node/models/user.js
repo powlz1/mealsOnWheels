@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
 			type:DataTypes.STRING,
 			field:'password'
 		}
+		
 	});
 	return User;
 }
