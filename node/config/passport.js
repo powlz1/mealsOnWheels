@@ -8,7 +8,7 @@ var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./database');
 var connection = mysql.createConnection(dbconfig.connection);
-var users = [{"id":111, "username":"sunny", "password":"sunny1"}];
+var users = [{"id":111, "username":"admin", "password":"admin"}];
 connection.query('USE ' + dbconfig.database);
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -52,5 +52,6 @@ function isLoggedIn(req, res, next) {
  
     res.sendStatus(401);
 }
+
 
 };
