@@ -18,7 +18,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="customerNumber">Customer number</label>
-                                    <input type="text" id="customerNumber" class="form-control" value="<%- customer["customerNumber"] %>" ng-model="saveCustomer['customerNumber']"/>
+                                    <input type="text" id="customerNumber" class="form-control" value="<%- customer["customerNumber"] %>"/>
                                 </div>
                             </div>
                         </div>
@@ -99,11 +99,54 @@
         </div>
     </div>
     <div style="position:fixed;top:0;right:0;padding:10px;">
-        <input type="button" value="Save" class="btn btn-primary" ng-click="addCustomer()"/>
+        <input type="button" value="Save" class="btn btn-primary" onclick="getCustomer_func()"/>
     </div>
 </div>
 
 <script type="text/javascript">
+
+//---------------------------------------------------------------
+
+ /*<% field = [{fieldId:"firstName",fieldName: "First name"},{fieldId:"lastName",fieldName: "Last name"}];%>
+                        <% include partials/customerInputAddUser.ejs %> */
+Add a customer
+- customer object
+
+var customer = {};
+
+- button that adds a customer
+  - javascript click function
+  
+  
+  
+  
+//function to get the customer data from the fields
+  function getCustomer()
+  {
+  //get the data from the fields and store them into variables
+		var customerNum = getElementbyID('customerNumber');
+		var firstName = document.getElementbyID('firstName'); 
+		var lastName = document.getElementbyID('lastName');
+		var userName = document.getElementbyID('userName');
+		var password = document.getElementbyID('password');
+		var address = document.getElementbyID('address');
+		var email = document.getElementbyID('email');
+		var phoneNum = document.getElementbyID('phoneNumber');	
+	//take the variables above and store them in an array
+		var customerObject = {customerNumber:customerNum, firstName, .lastName, .userName, .password, .address, .email, .phoneNum};
+	//pass the customer array to the save function to input into the database 
+		saveCustomer(cust_Array);
+  }
+ 
+  //function to put the data into the database
+  function saveCustomer(var array)
+  {
+	//save the customer into the databsae, so save the firleds as an array or input them individually?
+	//input an array of object(?) to the db containing all the data from the user? 
+  }
+
+//---------------------------------------------------------------
+
 
     angular.module('AddCustomer', []).controller('CustomerCtrl', ['$scope', '$http', function ($scope, $http) {
         $scope.saveCustomer = {};
@@ -143,5 +186,3 @@
             function (failure) { console.log("failed : ", failure ); });
         }
     }]);
-
-</script>
