@@ -70,7 +70,7 @@ module.exports = function(app, socket)
 		});
 	});
 	
-	app.get('/viewCustomers', ensureLogin.ensureLoggedIn(), function (req, res){
+	app.get('/viewCustomers', /*ensureLogin.ensureLoggedIn(),*/ function (req, res){
 		console.log ('GET /viewCustomers');		
 
 		// Find all the customers, include the mealRequirement and user tables
@@ -139,7 +139,7 @@ module.exports = function(app, socket)
 	});		// end app.get callback
 		
 
-	app.get('/addCustomer', ensureLogin.ensureLoggedIn(), function (req, res){
+	app.get('/addCustomer', /*ensureLogin.ensureLoggedIn(),*/ function (req, res){
 		console.log ('GET /addCustomer');
 
 		// Find all the meal requirement categories with the mealrequirement foreign key
@@ -167,7 +167,7 @@ module.exports = function(app, socket)
 			});
 	});
 
-	app.get('/mealOptions', ensureLogin.ensureLoggedIn(), function (req, res){
+	app.get('/mealOptions', /* ensureLogin.ensureLoggedIn(),*/ function (req, res){
 		console.log ('GET /mealOptions');
 		mealRequirementCategory.findAll({include:[mealRequirement]})
 		.then(function(mrcats){

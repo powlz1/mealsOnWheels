@@ -1,4 +1,4 @@
-<div class="row" ng-app="AddCustomer" ng-init='mrcats = <%- JSON.stringify(mrcats); %>; customer = <%- JSON.stringify(customer); %>; user = <%- JSON.stringify(user);%>' ng-controller="CustomerCtrl">
+<div class="row" >
     <div class="col-md-6 mt-4">
         <div>
             <div class="card">
@@ -77,29 +77,45 @@
             <div class="col-md-12">
                 <h3>Meal requirements</h3>
             </div>
-            <div class="col-md-12" ng-repeat="cat in mrcats">
-                <div class="card">
-                    <h3 class="card-header bg-inverse text-white" data-toggle="collapse" data-target="#block_{{ cat.id }}">{{ cat.category }} <span class="close text-white" ng-click="minimise(cat)">-</span></h3>
-                    <div id="block_{{ cat.id }}" class="collapse">
-                        <div class="card-block">
-                            <div class="row">
-                                <div class="col-md-6" ng-repeat="mealr in cat.mealRequirements">
+
+<!-- ejs, = only needed within the tag when outputting  variable -->
+        
+            <div class="col-md-12"> 
+                <div class="card">    
+                    <!-- mrcats loop here to print the categories. --> 
+                            <% for(var i=0; i<mrcats.length; i++) {%>
+
+                                <h3 class="card-header bg-inverse text-white" data-toggle="collapse" data-target="#block_<%= mrcats[i].id %>"> 
+                                <!-- as long as the array isnt empty print out all the categories within the mrcats array as tabs -->
+                                <% if(mrcats.length > 0) { %>
+                                <%= mrcats[i].category %>
+
+                                <% } %> <span class="close text-white">-</span></h3>
+
+                                <div id="block_<%= mrcats[i].id %>" class="collapse">
+                                <div class="card-block">
+                                <div class="row">
+                                
+                                <div class="col-md-6" >
                                     <div class="form-group">
-                                        <input type="checkbox" id="checkbox_{{ mealr.id }}" ng-model="mealRequirements[mealr.id]" value="{{mealr.id}}"
-                                                ng-checked="findRequirement(customer,mealr);"
+                                        <input type="checkbox" id="checkbox_{{ mealr.id }}" value="{{mealr.id}}"
+                                                
                                         />
-                                        <label for="checkbox_{{ mealr.id }}">{{ mealr.requirement }}</label>
+                                        <label for="checkbox_{{ mealr.id }}"> some stuff here (meal requirements)  </label>
                                     </div>
                                 </div>
+                            
                             </div>
                         </div>
                     </div>
+
+                           <% } %>                                            
                 </div>
             </div>
         </div>
     </div>
     <div style="position:fixed;top:0;right:0;padding:10px;">
-        <input type="button" value="Save" class="btn btn-primary" onclick="getCustomer_func()"/>
+        <input type="button" value="Save" class="btn btn-primary" onclick="getCustomer()"/>
     </div>
 </div>
 
@@ -109,6 +125,7 @@
 
  /*<% field = [{fieldId:"firstName",fieldName: "First name"},{fieldId:"lastName",fieldName: "Last name"}];%>
                         <% include partials/customerInputAddUser.ejs %> */
+                        /*
 Add a customer
 - customer object
 
@@ -118,28 +135,32 @@ var customer = {};
   - javascript click function
   
   
-  
+  */
   
 //function to get the customer data from the fields
   function getCustomer()
   {
   //get the data from the fields and store them into variables
-		var customerNum = getElementbyID('customerNumber');
-		var firstName = document.getElementbyID('firstName'); 
-		var lastName = document.getElementbyID('lastName');
-		var userName = document.getElementbyID('userName');
-		var password = document.getElementbyID('password');
-		var address = document.getElementbyID('address');
-		var email = document.getElementbyID('email');
-		var phoneNum = document.getElementbyID('phoneNumber');	
+		var customerNum = $('#customerNumber');
+		var firstName = $('#firstName'); 
+		var lastName = $('#lastName');
+		var userName = $('#userName');
+		var password = $('#password');
+		var address = $('#address');
+		var email = $('#email');
+		var phoneNum = $('#phoneNumber');	
+
 	//take the variables above and store them in an array
-		var customerObject = {customerNumber:customerNum, firstName, .lastName, .userName, .password, .address, .email, .phoneNum};
+    //object customerObject has a customer number, first name, last name etc. 
+		var customerObject = {customerNumber:customerNum, firstName:firstName, lastName:lastName, userName:userName, password:password, address:address, email:email, phoneNum:phoneNum};
+    //print out the entire object to make sure that all the values are correct before adding to the db
+    console.log(customerObject);
 	//pass the customer array to the save function to input into the database 
-		saveCustomer(cust_Array);
+	saveCustomer(cust_Array);
   }
  
   //function to put the data into the database
-  function saveCustomer(var array)
+  function saveCustomer(array)
   {
 	//save the customer into the databsae, so save the firleds as an array or input them individually?
 	//input an array of object(?) to the db containing all the data from the user? 
