@@ -205,7 +205,7 @@ module.exports = function(app, socket)
 		});
 	});
 	
-	app.get('/addDriver', function(req,res){
+	app.get('/addDriver',  ensureLogin.ensureLoggedIn(),  function(req,res){
 		console.log('GET /addDriver')
 		res.render('main.ejs', {page:"addDriver", driver:{}});
 	});
@@ -252,7 +252,7 @@ module.exports = function(app, socket)
 		});
 	});
 	
-	app.get("/customerDriver", function(req,res){
+	app.get("/customerDriver", ensureLogin.ensureLoggedIn(),  function(req,res){
 		console.log ('GET /customerDriver');
 		customer.findAll({include:[user]})
 		.then(function(customers){
