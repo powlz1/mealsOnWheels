@@ -78,7 +78,7 @@
                 <h3>Meal requirements</h3>
             </div>
 
-<!-- ejs, = only needed within the tag when outputting  variable -->
+
         
             <div class="col-md-12"> 
                 <div class="card">    
@@ -89,7 +89,6 @@
                                 <!-- as long as the array isnt empty print out all the categories within the mrcats array as tabs -->
                                 <% if(mrcats.length > 0) { %>
                                 <%= mrcats[i].category %>
-
                                 <% } %> <span class="close text-white">-</span></h3>
 
                                 <div id="block_<%= mrcats[i].id %>" class="collapse">
@@ -98,10 +97,15 @@
                                 
                                 <div class="col-md-6" >
                                     <div class="form-group">
-                                        <input type="checkbox" id="checkbox_{{ mealr.id }}" value="{{mealr.id}}"
-                                                
-                                        />
-                                        <label for="checkbox_{{ mealr.id }}"> some stuff here (meal requirements)  </label>
+                                        <% if(mrcats[i].mealRequirements.length > 0) { %>
+                                            <% for(var j=0; j<mrcats[i].mealRequirements.length; j++) {%>
+                                                <input type="checkbox" id="checkbox_" value="" />
+                                                     <label for="checkbox_"> 
+                                                        <%= mrcats[i].mealRequirements[j].requirement %>
+                                                       </label>
+                                            <% } %>
+                                        <% } %>
+                                                  
                                     </div>
                                 </div>
                             
@@ -138,8 +142,10 @@ var customer = {};
   */
   
 //function to get the customer data from the fields
-  function getCustomer()
+    //store in a jquery .ready function so that it will be loaded "as soon as the Document Object Model (DOM) for the page is safe to manipulate.""
+  $().ready(function getCustomer()
   {
+        console.log("success")
   //get the data from the fields and store them into variables
 		var customerNum = $('#customerNumber');
 		var firstName = $('#firstName'); 
@@ -157,7 +163,7 @@ var customer = {};
     console.log(customerObject);
 	//pass the customer array to the save function to input into the database 
 	saveCustomer(cust_Array);
-  }
+  })
  
   //function to put the data into the database
   function saveCustomer(array)
