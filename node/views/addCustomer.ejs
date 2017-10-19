@@ -119,7 +119,7 @@
         </div>
     </div>
     <div style="position:fixed;top:0;right:0;padding:10px;">
-        <input type="button" value="Save" class="btn btn-primary" onclick="getCustomer()"/>
+        <input type="button" value="Save" class="btn btn-primary" onclick=(getCustomer())/>
     </div>
 </div>
 
@@ -142,10 +142,11 @@ var customer = {};
   */
   
 //function to get the customer data from the fields
-    //store in a jquery .ready function so that it will be loaded "as soon as the Document Object Model (DOM) for the page is safe to manipulate.""
-  $().ready(function getCustomer()
+    //store in a jquery .ready function so that it will be loaded "as soon as the Document Object Model (DOM) for the page is safe to manipulate."
+ 
+  $(document).ready(function getCustomer()
   {
-        console.log("success")
+        console.log("function recognized");
   //get the data from the fields and store them into variables
 		var customerNum = $('#customerNumber');
 		var firstName = $('#firstName'); 
@@ -160,10 +161,11 @@ var customer = {};
     //object customerObject has a customer number, first name, last name etc. 
 		var customerObject = {customerNumber:customerNum, firstName:firstName, lastName:lastName, userName:userName, password:password, address:address, email:email, phoneNum:phoneNum};
     //print out the entire object to make sure that all the values are correct before adding to the db
-    console.log(customerObject);
+    //console.log(customerObject);
 	//pass the customer array to the save function to input into the database 
-	saveCustomer(cust_Array);
+	//saveCustomer(cust_Array);
   })
+  $
  
   //function to put the data into the database
   function saveCustomer(array)
